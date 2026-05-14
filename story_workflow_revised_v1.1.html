@@ -1,0 +1,1479 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Workflow Improvement Proposal — Story & Technical Story | Jira Admin + RTE</title>
+<style>
+:root {
+  --bg:#FFFFFF; --bg2:#F7F8FA; --bg3:#EBECF0;
+  --border:#DFE1E6; --border2:#B3BAC5;
+  --text:#172B4D; --muted:#5E6C84; --light:#97A0AF;
+  --radius:8px;
+  --shadow:0 1px 3px rgba(9,30,66,.12),0 0 0 1px rgba(9,30,66,.08);
+  --shadow-lg:0 8px 24px rgba(9,30,66,.16),0 0 0 1px rgba(9,30,66,.08);
+  --blue:#0052CC; --blue-f:#DEEBFF; --blue-b:#4C9AFF; --blue-t:#0747A6;
+  --purple:#6554C0; --purple-f:#EAE6FF; --purple-b:#8777D9; --purple-t:#403294;
+  --teal:#00875A; --teal-f:#E3FCEF; --teal-b:#36B37E; --teal-t:#006644;
+  --green:#006644; --green-f:#E3FCEF; --green-b:#00875A; --green-t:#006644;
+  --amber:#974F0C; --amber-f:#FFFAE6; --amber-b:#F6C90E; --amber-t:#974F0C;
+  --red:#BF2600; --red-f:#FFEBE6; --red-b:#FF5630; --red-t:#BF2600;
+  --gray-f:#F4F5F7; --gray-b:#C1C7D0; --gray-t:#42526E;
+  --orange-f:#FFF0B3; --orange-b:#FF991F; --orange-t:#7A4200;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;font-size:14px;line-height:1.6;color:var(--text);background:var(--bg)}
+
+/* ── PAGE ── */
+.page{max-width:1080px;margin:0 auto;padding:0 24px 80px}
+
+/* ── COVER ── */
+.cover{background:linear-gradient(135deg,#0747A6 0%,#0052CC 55%,#2684FF 100%);color:#fff;padding:42px 52px 0;margin:-1px -24px 0;position:relative;overflow:hidden}
+.cover::before,.cover::after{content:'';position:absolute;border-radius:50%;background:rgba(255,255,255,.05)}
+.cover::before{right:-60px;top:-60px;width:300px;height:300px}
+.cover::after{right:80px;bottom:-80px;width:200px;height:200px}
+.cover-tag{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.3);padding:3px 10px;border-radius:20px;display:inline-block;margin-bottom:16px}
+.cover-title{font-size:32px;font-weight:800;line-height:1.2;margin-bottom:12px;max-width:680px}
+.cover-sub{font-size:15px;opacity:.85;max-width:600px;line-height:1.65;margin-bottom:24px}
+.cover-meta{display:flex;gap:20px;flex-wrap:wrap}
+.cover-meta span{font-size:12px;opacity:.75;display:flex;align-items:center;gap:5px}
+
+/* ── NAV ── */
+.nav-tabs{display:flex;border-bottom:2px solid var(--border);background:var(--bg);position:sticky;top:0;z-index:100;box-shadow:0 2px 4px rgba(9,30,66,.08)}
+.nav-tab{padding:14px 22px;font-size:13px;font-weight:500;color:var(--muted);cursor:pointer;border-bottom:3px solid transparent;margin-bottom:-2px;transition:color .15s,border-color .15s;white-space:nowrap;background:none;border-top:none;border-left:none;border-right:none}
+.nav-tab:hover{color:var(--text);background:var(--bg2)}
+.nav-tab.active{color:var(--blue);border-bottom-color:var(--blue)}
+
+/* ── TAB PAGES ── */
+.tab-page{display:none;padding-top:32px}
+.tab-page.active{display:block}
+
+/* ── CHIPS / PILLS / TAGS ── */
+.chip{display:inline-flex;align-items:center;gap:4px;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:600;border:1.5px solid;white-space:nowrap}
+.tag{display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:500;border:1px solid;white-space:nowrap}
+
+/* ── HEADINGS ── */
+h2{font-size:20px;font-weight:700;margin:32px 0 12px;color:var(--text);display:flex;align-items:center;gap:8px}
+h3{font-size:15px;font-weight:700;margin:20px 0 8px;color:var(--text)}
+.section-intro{font-size:13px;color:var(--muted);line-height:1.7;max-width:780px;margin-bottom:20px}
+
+/* ── CARDS ── */
+.card{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);padding:20px 24px;margin-bottom:16px;box-shadow:var(--shadow)}
+.card-sm{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);padding:14px 18px;box-shadow:var(--shadow)}
+
+/* ── CALLOUTS ── */
+.callout{border-radius:var(--radius);padding:14px 18px;margin-bottom:20px;display:flex;gap:12px;font-size:13px;line-height:1.65}
+.callout-icon{font-size:18px;flex-shrink:0;margin-top:1px}
+.callout.info{background:#DEEBFF;border-left:4px solid #4C9AFF;color:#0747A6}
+.callout.warn{background:#FFFAE6;border-left:4px solid #F6C90E;color:#974F0C}
+.callout.tip{background:#EAE6FF;border-left:4px solid #8777D9;color:#403294}
+.callout.success{background:#E3FCEF;border-left:4px solid #36B37E;color:#006644}
+
+/* ── FLOW STRIP ── */
+.flow-strip{display:flex;flex-wrap:wrap;gap:0;align-items:center;padding:14px;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);overflow-x:auto}
+.flow-node{display:flex;flex-direction:column;align-items:center;gap:3px;flex-shrink:0;cursor:pointer;padding:4px 2px;border-radius:6px;transition:background .15s}
+.flow-node:hover{background:var(--bg3)}
+.fn-chip{padding:5px 11px;border-radius:20px;font-size:11px;font-weight:700;border:1.5px solid;text-align:center}
+.fn-sub{font-size:9px;color:var(--light);white-space:nowrap;text-align:center}
+.flow-arr{font-size:14px;color:var(--border2);flex-shrink:0;padding:0 2px;margin-top:-20px}
+.flow-gate{display:flex;flex-direction:column;align-items:center;gap:2px;flex-shrink:0;cursor:pointer;padding:2px 4px;border-radius:6px;transition:background .15s}
+.flow-gate:hover{background:var(--bg3)}
+.gate-diamond{width:20px;height:20px;transform:rotate(45deg);border:2.5px solid;border-radius:2px}
+.gate-lbl{font-size:9px;font-weight:800;white-space:nowrap}
+
+/* ── SCREEN CARDS ── */
+.screen-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:32px}
+@media(max-width:780px){.screen-grid{grid-template-columns:1fr}}
+.screen-card{border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;cursor:pointer;transition:box-shadow .2s,transform .2s;box-shadow:var(--shadow)}
+.screen-card:hover{box-shadow:var(--shadow-lg);transform:translateY(-2px)}
+.screen-card-top{padding:14px 16px;border-bottom:1px solid var(--border)}
+.screen-card-trigger{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--light);margin-bottom:6px;display:flex;align-items:center;gap:5px}
+.screen-card-name{font-size:14px;font-weight:700;color:var(--text)}
+.screen-card-arrow{font-size:11px;color:var(--muted);margin-top:2px}
+.screen-card-preview{padding:12px;background:var(--bg2);min-height:120px;font-size:11px;color:var(--muted)}
+.screen-card-footer{padding:9px 16px;border-top:1px solid var(--border);font-size:11px;color:var(--muted);display:flex;align-items:center;gap:6px;background:var(--bg)}
+.preview-check{display:flex;align-items:center;gap:6px;padding:4px 0;font-size:10px;color:var(--muted);border-bottom:1px solid var(--border)}
+.preview-check:last-child{border-bottom:none}
+.preview-box{width:10px;height:10px;border:1.5px solid var(--border2);border-radius:2px;flex-shrink:0}
+
+/* ── MODAL ── */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(9,30,66,.54);z-index:1000;align-items:center;justify-content:center;padding:20px}
+.modal-overlay.open{display:flex}
+.modal{background:var(--bg);border-radius:var(--radius);width:100%;max-width:620px;max-height:90vh;overflow-y:auto;box-shadow:var(--shadow-lg);animation:mIn .2s ease}
+@keyframes mIn{from{opacity:0;transform:scale(.96) translateY(8px)}to{opacity:1;transform:none}}
+.modal-header{padding:20px 24px 16px;border-bottom:1px solid var(--border);display:flex;align-items:flex-start;justify-content:space-between;gap:12px;position:sticky;top:0;background:var(--bg);z-index:1}
+.modal-close{background:none;border:none;cursor:pointer;font-size:20px;color:var(--muted);padding:2px 6px;border-radius:4px}
+.modal-close:hover{background:var(--bg3);color:var(--text)}
+.modal-body{padding:20px 24px}
+.modal-footer{padding:14px 24px;border-top:1px solid var(--border);display:flex;gap:10px;justify-content:flex-end;position:sticky;bottom:0;background:var(--bg)}
+
+/* ── JIRA SCREEN MOCK ── */
+.jira-screen{border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;font-size:12px}
+.jira-screen-bar{background:#0052CC;color:#fff;padding:8px 14px;font-size:12px;font-weight:600;display:flex;align-items:center;gap:8px}
+.jira-screen-body{padding:16px}
+.jira-field-label{font-size:11px;font-weight:700;color:var(--muted);margin-bottom:4px;text-transform:uppercase;letter-spacing:.04em}
+.jira-field-val{padding:7px 10px;border:1px solid var(--border);border-radius:4px;background:var(--bg2);font-size:12px;color:var(--muted);margin-bottom:14px}
+.jira-check-section{border:1px solid var(--border);border-radius:6px;overflow:hidden;margin-bottom:12px}
+.jira-check-hd{padding:9px 14px;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:space-between}
+.jira-check-item{display:flex;align-items:flex-start;gap:10px;padding:9px 14px;border-top:1px solid var(--border);cursor:pointer;transition:background .12s}
+.jira-check-item:hover{background:var(--bg2)}
+.jira-check-item.checked{background:#F0FFF4}
+.jira-checkbox{width:16px;height:16px;border:2px solid var(--border2);border-radius:3px;flex-shrink:0;margin-top:1px;display:flex;align-items:center;justify-content:center;transition:all .12s;cursor:pointer}
+.jira-check-item.checked .jira-checkbox{background:var(--teal-b);border-color:var(--teal-b);color:#fff}
+.jira-check-text{font-size:12px;line-height:1.5;color:var(--text)}
+.jira-check-item.checked .jira-check-text{color:var(--muted)}
+.jira-note{padding:8px 14px;font-size:11px;color:var(--muted);background:var(--bg2);border-top:1px solid var(--border);line-height:1.5}
+.progress-ring{font-size:11px;font-weight:700;padding:2px 8px;border-radius:10px;background:var(--bg3);color:var(--muted)}
+.progress-ring.complete{background:#E3FCEF;color:#006644}
+.progress-ring.partial{background:#FFFAE6;color:#974F0C}
+.jira-warning{padding:10px 14px;border-radius:6px;font-size:12px;line-height:1.5;margin-bottom:14px;display:flex;gap:8px}
+.jira-textarea{width:100%;border:1px solid var(--border);border-radius:4px;padding:8px 10px;font-size:12px;color:var(--text);resize:vertical;min-height:70px;background:var(--bg2);font-family:inherit}
+.jira-btn{padding:7px 16px;border-radius:4px;font-size:13px;font-weight:600;cursor:pointer;border:none;transition:background .15s}
+.jira-btn-primary{background:#0052CC;color:#fff}
+.jira-btn-primary:hover{background:#0747A6}
+.jira-btn-secondary{background:var(--bg3);color:var(--text);border:1px solid var(--border2)}
+.transition-arrow{display:flex;align-items:center;gap:6px;font-size:13px;padding:6px 12px;background:var(--bg2);border-radius:6px;border:1px solid var(--border);margin-bottom:16px;flex-wrap:wrap}
+
+/* ── STATUS TABLE ── */
+.st-table{width:100%;border-collapse:collapse;font-size:13px}
+.st-table th{text-align:left;padding:9px 12px;background:var(--bg2);font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--light);border:1px solid var(--border)}
+.st-table td{padding:9px 12px;border:1px solid var(--border);vertical-align:middle}
+.st-table tr:nth-child(even) td{background:#FAFBFC}
+.gate-row-dor td{background:var(--amber-f)!important;text-align:center;font-size:12px;font-weight:700;color:var(--amber-t);padding:5px}
+.gate-row-doi td{background:var(--purple-f)!important;text-align:center;font-size:12px;font-weight:700;color:var(--purple-t);padding:5px}
+.gate-row-dod td{background:var(--teal-f)!important;text-align:center;font-size:12px;font-weight:700;color:var(--teal-t);padding:5px}
+.pct-wrap{background:var(--border);border-radius:3px;height:4px;margin-top:4px;overflow:hidden}
+.pct-fill{height:100%;border-radius:3px;background:var(--blue)}
+
+/* ── UTILS ── */
+.mt8{margin-top:8px}.mt12{margin-top:12px}.mt16{margin-top:16px}.mt24{margin-top:24px}
+.mb8{margin-bottom:8px}.mb12{margin-bottom:12px}.mb16{margin-bottom:16px}
+.fw7{font-weight:700}.text-sm{font-size:12px}.text-muted{color:var(--muted)}
+.divider{height:1px;background:var(--border);margin:24px 0}
+
+/* ── SVG FLOWCHART SCROLLING ── */
+#flow-svg {
+  display: block;
+  max-width: 100%;
+  overflow-x: auto;
+  overflow-y: auto;
+}
+.flow-container {
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding-bottom: 8px;
+}
+.flow-container::-webkit-scrollbar {
+  height: 8px;
+  width: 8px;
+}
+.flow-container::-webkit-scrollbar-track {
+  background: var(--bg2);
+}
+.flow-container::-webkit-scrollbar-thumb {
+  background: var(--border2);
+  border-radius: 4px;
+}
+.flow-container::-webkit-scrollbar-thumb:hover {
+  background: var(--gray-t);
+}
+</style>
+</head>
+<body>
+
+<!-- ═══ COVER ══════════════════════════════════════════════ -->
+<div class="cover">
+  <div class="page">
+    <div class="cover-tag">📋 Workflow Proposal</div>
+    <div class="cover-title">Story &amp; Technical Story<br>Workflow Redesign</div>
+    <div class="cover-sub">A leaner, more intuitive Jira status flow enhancing the existing workflows — with embedded quality gates and smart transition screens that guide teams through DoR, DoI, and DoD checkpoints at the right moment. Updated after internal alignment session.</div>
+    <div class="cover-meta">
+      <span>👥 Jira Admin Team + RTE</span>
+      <span>📅 May 2025 · v1.1</span>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ NAV ════════════════════════════════════════════════ -->
+<div class="nav-tabs" id="nav">
+  <button class="nav-tab active" onclick="showTab('overview')">📋 Overview &amp; Goals</button>
+  <button class="nav-tab" onclick="showTab('flow')">🟦 Proposed Flow</button>
+  <button class="nav-tab" onclick="showTab('screens')">🖥 Transition Screens</button>
+</div>
+
+<div class="page">
+
+<!-- ═══════════════════════════════════════════════════════════
+     TAB 1 — OVERVIEW
+═══════════════════════════════════════════════════════════ -->
+<div class="tab-page active" id="tab-overview">
+
+  <div class="callout info">
+    <div class="callout-icon">ℹ️</div>
+    <div>This is a first proposal from the <strong>Jira Admin team and RTE</strong> for stakeholder illustration. It reflects the post-internal-review version (v1.1) incorporating agreed changes: addition of <em>In Analysis</em> status, revised DoI and DoR criteria, and refined transition screen designs.</div>
+  </div>
+
+  <h2>🎯 Goals of this initiative</h2>
+  <div class="section-intro">The existing SFDC workflows for Story and Technical Story have grown complex. This initiative targets three outcomes simultaneously:</div>
+
+  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:28px">
+    <div class="card" style="border-top:3px solid var(--blue)">
+      <div style="font-size:22px;margin-bottom:8px">⚡</div>
+      <div class="fw7 mb8">Leaner flow</div>
+      <p class="text-sm text-muted">Every status must have a distinct, unambiguous meaning with a named owner. No redundant or overlapping states. The new <strong>In Analysis</strong> status makes BA/refinement work visible.</p>
+    </div>
+    <div class="card" style="border-top:3px solid var(--purple)">
+      <div style="font-size:22px;margin-bottom:8px">📈</div>
+      <div class="fw7 mb8">KPI visibility</div>
+      <p class="text-sm text-muted">Each status is positioned so lead time, cycle time, block time, and test turnaround are measurable with zero manual effort from Jira control charts and CFD.</p>
+    </div>
+    <div class="card" style="border-top:3px solid var(--teal)">
+      <div style="font-size:22px;margin-bottom:8px">🔷</div>
+      <div class="fw7 mb8">Embedded gate screens</div>
+      <p class="text-sm text-muted">Quality checkpoints appear as contextual Jira transition screens — teams are guided through DoR, DoI, and DoD checklists inline, not via separate documents.</p>
+    </div>
+  </div>
+
+  <h2>🖥 What are transition screens?</h2>
+  <div class="section-intro">A Jira transition screen is a dialog that appears when a team member moves a story between specific statuses. The user must complete the form before the transition is confirmed. This proposal introduces <strong>four transition screens</strong>:</div>
+
+  <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin-bottom:28px">
+    <div class="card-sm" style="border-left:4px solid var(--amber-b)">
+      <div style="font-size:18px;margin-bottom:6px">🟡</div>
+      <div class="fw7 mb8" style="color:var(--amber-t)">DoR Screen</div>
+      <div class="text-sm text-muted">Triggered when moving to <strong>Ready for Implementation</strong>. Team must checkmark Definition of Ready criteria — including QA readiness — before the story enters a sprint.</div>
+    </div>
+    <div class="card-sm" style="border-left:4px solid var(--purple-b)">
+      <div style="font-size:18px;margin-bottom:6px">🔷</div>
+      <div class="fw7 mb8" style="color:var(--purple-t)">DoI Screen</div>
+      <div class="text-sm text-muted">Triggered when moving to <strong>Ready for Testing</strong>. Developer confirms functional testing, unit test coverage, staging deployment, merged PR, and license clearance for new dependencies.</div>
+    </div>
+    <div class="card-sm" style="border-left:4px solid var(--teal-b)">
+      <div style="font-size:18px;margin-bottom:6px">🧪</div>
+      <div class="fw7 mb8" style="color:var(--teal-t)">Test Evidence Screen</div>
+      <div class="text-sm text-muted">Triggered after <strong>In Test → Ready for Acceptance</strong>. QA confirms all test steps are documented and evidence is attached before the Product Owner is invited to UAT.</div>
+    </div>
+    <div class="card-sm" style="border-left:4px solid var(--green-b)">
+      <div style="font-size:18px;margin-bottom:6px">✅</div>
+      <div class="fw7 mb8" style="color:var(--green-t)">DoD Screen</div>
+      <div class="text-sm text-muted">Triggered before <strong>Closed</strong>. All Definition of Done items shown as a checklist — every box must be ticked before the story can be permanently closed.</div>
+    </div>
+  </div>
+
+  <h2>📦 Issue types in scope</h2>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:8px">
+    <div class="card">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+        <span style="font-size:22px;background:var(--blue-f);padding:6px;border-radius:6px">📖</span>
+        <div><div class="fw7">Story</div><div class="text-sm text-muted">User-facing business functionality</div></div>
+      </div>
+      <p class="text-sm text-muted">Represents a unit of user value aligned to a D365 CRM sales, service, or marketing scenario. Written from the perspective of a business user. Follows the full workflow including all gates.</p>
+    </div>
+    <div class="card">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+        <span style="font-size:22px;background:var(--purple-f);padding:6px;border-radius:6px">⚙️</span>
+        <div><div class="fw7">Technical Story</div><div class="text-sm text-muted">Non-user-facing technical enabler</div></div>
+      </div>
+      <p class="text-sm text-muted">Represents infrastructure, integration, refactoring, or platform work. <strong>Same workflow</strong> — DoR, DoI, and DoD apply with equal rigour. No "tech bypass" on quality gates.</p>
+    </div>
+  </div>
+
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     TAB 2 — PROPOSED FLOW
+═══════════════════════════════════════════════════════════ -->
+<div class="tab-page" id="tab-flow">
+
+  <div class="callout tip">
+    <div class="callout-icon">💡</div>
+    <div>Applies to both <strong>Story</strong> and <strong>Technical Story</strong> issue types. The <strong>In Analysis</strong> status (new) sits between New and DoR, making BA and refinement work explicitly visible on the board and measurable in lead time. Click any flow node to open its transition screen mockup.</div>
+  </div>
+
+  <h2>🟦 Proposed status flow</h2>
+  <div class="flow-strip mb16">
+    <div class="flow-node" onclick="null">
+      <div class="fn-chip" style="background:var(--gray-f);border-color:var(--gray-b);color:var(--gray-t)">📥 New</div>
+      <div class="fn-sub">0% · PO</div>
+    </div>
+    <div class="flow-arr">›</div>
+    <div class="flow-node" onclick="null">
+      <div class="fn-chip" style="background:var(--orange-f);border-color:var(--orange-b);color:var(--orange-t)">🔍 In Analysis</div>
+      <div class="fn-sub">10% · BA / PO</div>
+    </div>
+    <div class="flow-arr">›</div>
+    <div class="flow-gate" onclick="openModal('modal-dor')">
+      <div class="gate-diamond" style="border-color:var(--amber-b);background:var(--amber-f)"></div>
+      <div class="gate-lbl" style="color:var(--amber-t)">DoR ▶</div>
+    </div>
+    <div class="flow-arr">›</div>
+    <div class="flow-node" onclick="null">
+      <div class="fn-chip" style="background:var(--blue-f);border-color:var(--blue-b);color:var(--blue-t)">🚀 Ready for Impl.</div>
+      <div class="fn-sub">20% · Dev</div>
+    </div>
+    <div class="flow-arr">›</div>
+    <div class="flow-node" onclick="null">
+      <div class="fn-chip" style="background:var(--blue-f);border-color:var(--blue-b);color:var(--blue-t)">⚙️ In Progress</div>
+      <div class="fn-sub">45% · Dev</div>
+    </div>
+    <div class="flow-arr">›</div>
+    <div class="flow-gate" onclick="openModal('modal-doi')">
+      <div class="gate-diamond" style="border-color:var(--purple-b);background:var(--purple-f)"></div>
+      <div class="gate-lbl" style="color:var(--purple-t)">DoI ▶</div>
+    </div>
+    <div class="flow-arr">›</div>
+    <div class="flow-node" onclick="null">
+      <div class="fn-chip" style="background:var(--teal-f);border-color:var(--teal-b);color:var(--teal-t)">🧪 Ready for Test</div>
+      <div class="fn-sub">60% · QA</div>
+    </div>
+    <div class="flow-arr">›</div>
+    <div class="flow-node" onclick="null">
+      <div class="fn-chip" style="background:var(--teal-f);border-color:var(--teal-b);color:var(--teal-t)">🔬 In Test</div>
+      <div class="fn-sub">75% · QA</div>
+    </div>
+    <div class="flow-arr">›</div>
+    <div class="flow-node" onclick="null">
+      <div class="fn-chip" style="background:var(--teal-f);border-color:var(--teal-b);color:var(--teal-t);padding:5px 1px">👁 Ready for Accept.</div>
+      <div class="fn-sub">88% · PO</div>
+    </div>
+    <div class="flow-arr">›</div>
+    <div class="flow-gate" onclick="openModal('modal-dod')">
+      <div class="gate-diamond" style="border-color:var(--green-b);background:var(--green-f)"></div>
+      <div class="gate-lbl" style="color:var(--green-t)">DoD ▶</div>
+    </div>
+    <div class="flow-arr">›</div>
+    <div class="flow-node" onclick="null">
+      <div class="fn-chip" style="background:var(--green-f);border-color:var(--green-b);color:var(--green-t)">✅ Closed</div>
+      <div class="fn-sub">100% 🚀</div>
+    </div>
+  </div>
+
+  <div class="callout warn" style="margin-bottom:24px">
+    <div class="callout-icon">⚠️</div>
+    <div><strong>On Hold</strong> can be entered from In Progress, Ready for Testing, or In Test. Story always returns to its previous status when unblocked. Entry triggers the mandatory blocker log screen. · Click ▶ on any gate node above to preview its transition screen.</div>
+  </div>
+
+  <h2>📊 Status summary</h2>
+  <table class="st-table">
+    <thead>
+      <tr><th>#</th><th>Status</th><th>Category</th><th>Owner</th><th>Progress</th><th>KPIs active</th><th>Screen</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>1</td>
+        <td><span class="chip" style="background:var(--gray-f);border-color:var(--gray-b);color:var(--gray-t)">📥 New</span></td>
+        <td class="text-sm">Backlog</td><td class="text-sm">Product Owner</td>
+        <td><div class="text-sm text-muted">0%</div><div class="pct-wrap"><div class="pct-fill" style="width:0%"></div></div></td>
+        <td><span class="tag" style="background:var(--blue-f);border-color:var(--blue-b);color:var(--blue-t);font-size:10px">Lead time</span></td>
+        <td>—</td>
+      </tr>
+      <tr>
+        <td>2</td>
+        <td><span class="chip" style="background:var(--orange-f);border-color:var(--orange-b);color:var(--orange-t)">🔍 In Analysis</span></td>
+        <td class="text-sm">Refinement</td><td class="text-sm">BA / Product Owner</td>
+        <td><div class="text-sm text-muted">10%</div><div class="pct-wrap"><div class="pct-fill" style="width:10%"></div></div></td>
+        <td><span class="tag" style="background:var(--blue-f);border-color:var(--blue-b);color:var(--blue-t);font-size:10px">Lead time</span></td>
+        <td>—</td>
+      </tr>
+      <tr class="gate-row-dor"><td colspan="7">🔷 DoR — Definition of Ready screen &nbsp;·&nbsp; Transition: In Analysis → Ready for Implementation</td></tr>
+      <tr>
+        <td>3</td>
+        <td><span class="chip" style="background:var(--blue-f);border-color:var(--blue-b);color:var(--blue-t)">🚀 Ready for Implementation</span></td>
+        <td class="text-sm">Sprint backlog</td><td class="text-sm">Developer</td>
+        <td><div class="text-sm text-muted">20%</div><div class="pct-wrap"><div class="pct-fill" style="width:20%"></div></div></td>
+        <td><span class="tag" style="background:var(--blue-f);border-color:var(--blue-b);color:var(--blue-t);font-size:10px">Lead</span> <span class="tag" style="background:var(--purple-f);border-color:var(--purple-b);color:var(--purple-t);font-size:10px">Cycle starts</span></td>
+        <td><span class="tag" style="background:var(--amber-f);border-color:var(--amber-b);color:var(--amber-t);font-size:10px">DoR Screen</span></td>
+      </tr>
+      <tr>
+        <td>4</td>
+        <td><span class="chip" style="background:var(--blue-f);border-color:var(--blue-b);color:var(--blue-t)">⚙️ In Progress</span></td>
+        <td class="text-sm">Development</td><td class="text-sm">Developer + Reviewers</td>
+        <td><div class="text-sm text-muted">45%</div><div class="pct-wrap"><div class="pct-fill" style="width:45%"></div></div></td>
+        <td><span class="tag" style="background:var(--purple-f);border-color:var(--purple-b);color:var(--purple-t);font-size:10px">Cycle</span> <span class="tag" style="background:var(--amber-f);border-color:var(--amber-b);color:var(--amber-t);font-size:10px">Block time</span></td>
+        <td>—</td>
+      </tr>
+      <tr class="gate-row-doi"><td colspan="7">🔷 DoI — Definition of Implemented screen &nbsp;·&nbsp; Transition: In Progress → Ready for Testing</td></tr>
+      <tr>
+        <td>5</td>
+        <td><span class="chip" style="background:var(--teal-f);border-color:var(--teal-b);color:var(--teal-t)">🧪 Ready for Testing</span></td>
+        <td class="text-sm">QA queue</td><td class="text-sm">QA Engineer</td>
+        <td><div class="text-sm text-muted">60%</div><div class="pct-wrap"><div class="pct-fill" style="width:60%"></div></div></td>
+        <td><span class="tag" style="background:var(--purple-f);border-color:var(--purple-b);color:var(--purple-t);font-size:10px">Cycle</span> <span class="tag" style="background:var(--teal-f);border-color:var(--teal-b);color:var(--teal-t);font-size:10px">Test TAT starts</span></td>
+        <td><span class="tag" style="background:var(--purple-f);border-color:var(--purple-b);color:var(--purple-t);font-size:10px">DoI Screen</span></td>
+      </tr>
+      <tr>
+        <td>6</td>
+        <td><span class="chip" style="background:var(--teal-f);border-color:var(--teal-b);color:var(--teal-t)">🔬 In Test</span></td>
+        <td class="text-sm">QA execution</td><td class="text-sm">QA Engineer</td>
+        <td><div class="text-sm text-muted">75%</div><div class="pct-wrap"><div class="pct-fill" style="width:75%"></div></div></td>
+        <td><span class="tag" style="background:var(--purple-f);border-color:var(--purple-b);color:var(--purple-t);font-size:10px">Cycle</span> <span class="tag" style="background:var(--teal-f);border-color:var(--teal-b);color:var(--teal-t);font-size:10px">Test TAT</span> <span class="tag" style="background:var(--amber-f);border-color:var(--amber-b);color:var(--amber-t);font-size:10px">Block time</span></td>
+        <td>—</td>
+      </tr>
+      <tr>
+        <td>7</td>
+        <td><span class="chip" style="background:var(--teal-f);border-color:var(--teal-b);color:var(--teal-t)">👁 Ready for Acceptance</span></td>
+        <td class="text-sm">UAT queue</td><td class="text-sm">Product Owner</td>
+        <td><div class="text-sm text-muted">88%</div><div class="pct-wrap"><div class="pct-fill" style="width:88%"></div></div></td>
+        <td><span class="tag" style="background:var(--purple-f);border-color:var(--purple-b);color:var(--purple-t);font-size:10px">Cycle</span> <span class="tag" style="background:var(--teal-f);border-color:var(--teal-b);color:var(--teal-t);font-size:10px">UAT TAT</span></td>
+        <td><span class="tag" style="background:var(--teal-f);border-color:var(--teal-b);color:var(--teal-t);font-size:10px">Test Evidence</span></td>
+      </tr>
+      <tr class="gate-row-dod"><td colspan="7">🔷 DoD — Definition of Done screen &nbsp;·&nbsp; Transition: Ready for Acceptance → Closed</td></tr>
+      <tr>
+        <td>8</td>
+        <td><span class="chip" style="background:var(--green-f);border-color:var(--green-b);color:var(--green-t)">✅ Closed</span></td>
+        <td class="text-sm">Released</td><td class="text-sm">Release Manager</td>
+        <td><div class="text-sm text-muted">100%</div><div class="pct-wrap"><div class="pct-fill" style="width:100%"></div></div></td>
+        <td><span class="tag" style="background:var(--blue-f);border-color:var(--blue-b);color:var(--blue-t);font-size:10px">Lead ✓</span> <span class="tag" style="background:var(--purple-f);border-color:var(--purple-b);color:var(--purple-t);font-size:10px">Cycle ✓</span> <span class="tag" style="background:var(--green-f);border-color:var(--green-b);color:var(--green-t);font-size:10px">Throughput</span></td>
+        <td><span class="tag" style="background:var(--green-f);border-color:var(--green-b);color:var(--green-t);font-size:10px">DoD Screen</span></td>
+      </tr>
+      <tr>
+        <td>⚠</td>
+        <td><span class="chip" style="background:var(--amber-f);border-color:var(--amber-b);color:var(--amber-t)">⚠️ On Hold</span></td>
+        <td class="text-sm">Paused (any phase)</td><td class="text-sm">Scrum Master owns</td>
+        <td><div class="text-sm text-muted">— paused</div></td>
+        <td><span class="tag" style="background:var(--amber-f);border-color:var(--amber-b);color:var(--amber-t);font-size:10px">Block time</span> <span class="tag" style="background:var(--amber-f);border-color:var(--amber-b);color:var(--amber-t);font-size:10px">CFD</span></td>
+        <td><span class="tag" style="background:var(--amber-f);border-color:var(--amber-b);color:var(--amber-t);font-size:10px">Blocker Log</span></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="divider"></div>
+  <h2>📚 Status definitions</h2>
+  <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin-bottom:14px">
+  <div class="card" style="border-left:4px solid var(--orange-b);order:2">
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;flex-wrap:wrap">
+      <span class="chip" style="background:var(--orange-f);border-color:var(--orange-b);color:var(--orange-t)">🔍 In Analysis</span>
+      <span class="tag" style="background:var(--bg2);border-color:var(--border);color:var(--muted)">Jira: In Analysis</span>
+      <span class="tag" style="background:var(--bg2);border-color:var(--border);color:var(--muted)">Owner: BA / Product Owner</span>
+      <span class="tag" style="background:var(--blue-f);border-color:var(--blue-b);color:var(--blue-t);font-size:10px">KPI: Lead time</span>
+    </div>
+    <p class="text-sm text-muted mb12">Story has been accepted for refinement. The BA and/or Product Owner are actively analysing the requirement — writing acceptance criteria, identifying dependencies, assessing feasibility, and defining testability. A story stays in In Analysis until it is ready to be assessed against DoR criteria.</p>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+      <div>
+        <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--light);margin-bottom:6px">Activities in this status</div>
+        <div class="text-sm text-muted" style="line-height:1.8">
+          ✅ &nbsp;Acceptance criteria being drafted<br>
+          ✅ &nbsp;Dependencies identified and owners contacted<br>
+          ✅ &nbsp;Testability assessed — testable vs not testable<br>
+          ✅ &nbsp;Test scope estimated (number of test cases)<br>
+          ✅ &nbsp;Technical feasibility discussed with developer<br>
+          ✅ &nbsp;Story splitting considered if too large
+        </div>
+      </div>
+      <div>
+        <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--light);margin-bottom:6px">Transitions</div>
+        <div class="text-sm text-muted" style="line-height:1.8">
+          <span style="color:var(--teal-t)">→</span> &nbsp;Ready for Implementation (after DoR gate)<br>
+          <span style="color:var(--red-t)">← </span> &nbsp;New (if de-scoped or split required)<br><br>
+          <strong>Bottleneck signal:</strong><br>
+          Long In Analysis = requirement ambiguity or BA capacity constraint
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card" style="border-left:4px solid var(--gray-b);order:1">
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;flex-wrap:wrap">
+      <span class="chip" style="background:var(--gray-f);border-color:var(--gray-b);color:var(--gray-t)">📥 New</span>
+      <span class="tag" style="background:var(--bg2);border-color:var(--border);color:var(--muted)">Jira: New</span>
+      <span class="tag" style="background:var(--bg2);border-color:var(--border);color:var(--muted)">Owner: Product Owner</span>
+      <span class="tag" style="background:var(--blue-f);border-color:var(--blue-b);color:var(--blue-t);font-size:10px">KPI: Lead time</span>
+    </div>
+    <p class="text-sm text-muted mb12">Story has been created and captured in backlog, but active refinement has not started yet. This status is used for intake, initial triage, and prioritization readiness.</p>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+      <div>
+        <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--light);margin-bottom:6px">Activities in this status</div>
+        <div class="text-sm text-muted" style="line-height:1.8">
+          ✅ &nbsp;Backlog item created with clear summary<br>
+          ✅ &nbsp;Issue type and team assignment validated<br>
+          ✅ &nbsp;Priority and business value reviewed<br>
+          ✅ &nbsp;Initial dependency signals flagged
+        </div>
+      </div>
+      <div>
+        <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--light);margin-bottom:6px">Transitions</div>
+        <div class="text-sm text-muted" style="line-height:1.8">
+          <span style="color:var(--teal-t)">→</span> &nbsp;In Analysis (active refinement starts)<br>
+          <span style="color:var(--red-t)">← </span> &nbsp;Cancelled/Archived (if dropped by PO)<br><br>
+          <strong>Bottleneck signal:</strong><br>
+          Long New queue indicates intake overload or weak prioritization cadence
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card" style="border-left:4px solid var(--blue-b);order:3">
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;flex-wrap:wrap">
+      <span class="chip" style="background:var(--blue-f);border-color:var(--blue-b);color:var(--blue-t)">🚀 Ready for Implementation</span>
+      <span class="tag" style="background:var(--bg2);border-color:var(--border);color:var(--muted)">Jira: Ready for Implementation</span>
+      <span class="tag" style="background:var(--bg2);border-color:var(--border);color:var(--muted)">Owner: Developer</span>
+      <span class="tag" style="background:var(--purple-f);border-color:var(--purple-b);color:var(--purple-t);font-size:10px">KPI: Cycle starts</span>
+    </div>
+    <p class="text-sm text-muted mb12">Story has passed DoR and is implementation-ready. Scope, acceptance criteria, and testability are clear enough for execution planning and sprint commitment.</p>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+      <div>
+        <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--light);margin-bottom:6px">Activities in this status</div>
+        <div class="text-sm text-muted" style="line-height:1.8">
+          ✅ &nbsp;DoR checklist completed and approved<br>
+          ✅ &nbsp;Story pulled into sprint backlog<br>
+          ✅ &nbsp;Implementation approach confirmed<br>
+          ✅ &nbsp;Dev ownership agreed
+        </div>
+      </div>
+      <div>
+        <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--light);margin-bottom:6px">Transitions</div>
+        <div class="text-sm text-muted" style="line-height:1.8">
+          <span style="color:var(--teal-t)">→</span> &nbsp;In Progress (coding/config starts)<br>
+          <span style="color:var(--red-t)">← </span> &nbsp;In Analysis (if scope re-opened)<br><br>
+          <strong>Bottleneck signal:</strong><br>
+          Queue growth here implies sprint capacity mismatch
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card" style="border-left:4px solid var(--blue-b);order:4">
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;flex-wrap:wrap">
+      <span class="chip" style="background:var(--blue-f);border-color:var(--blue-b);color:var(--blue-t)">⚙️ In Progress</span>
+      <span class="tag" style="background:var(--bg2);border-color:var(--border);color:var(--muted)">Jira: In Progress</span>
+      <span class="tag" style="background:var(--bg2);border-color:var(--border);color:var(--muted)">Owner: Developer + Reviewers</span>
+      <span class="tag" style="background:var(--purple-f);border-color:var(--purple-b);color:var(--purple-t);font-size:10px">KPI: Cycle time</span>
+    </div>
+    <p class="text-sm text-muted mb12">Active development, peer review, and implementation refinement happen in this status. Any blocker discovered here should route to On Hold with a blocker log.</p>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+      <div>
+        <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--light);margin-bottom:6px">Activities in this status</div>
+        <div class="text-sm text-muted" style="line-height:1.8">
+          ✅ &nbsp;Code/configuration work in progress<br>
+          ✅ &nbsp;PR raised and reviewed<br>
+          ✅ &nbsp;Unit/component tests updated<br>
+          ✅ &nbsp;Technical comments addressed
+        </div>
+      </div>
+      <div>
+        <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--light);margin-bottom:6px">Transitions</div>
+        <div class="text-sm text-muted" style="line-height:1.8">
+          <span style="color:var(--teal-t)">→</span> &nbsp;Ready for Testing (after DoI screen)<br>
+          <span style="color:var(--amber-t)">→</span> &nbsp;On Hold (if blocked)<br><br>
+          <strong>Bottleneck signal:</strong><br>
+          Long dwell time suggests rework, review churn, or hidden dependencies
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card" style="border-left:4px solid var(--teal-b);order:5">
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;flex-wrap:wrap">
+      <span class="chip" style="background:var(--teal-f);border-color:var(--teal-b);color:var(--teal-t)">🧪 Ready for Testing</span>
+      <span class="tag" style="background:var(--bg2);border-color:var(--border);color:var(--muted)">Jira: Ready for Testing</span>
+      <span class="tag" style="background:var(--bg2);border-color:var(--border);color:var(--muted)">Owner: QA Engineer</span>
+      <span class="tag" style="background:var(--teal-f);border-color:var(--teal-b);color:var(--teal-t);font-size:10px">KPI: Test TAT starts</span>
+    </div>
+    <p class="text-sm text-muted mb12">Implementation is complete and handed over to QA after DoI validation. The story waits in QA queue until execution begins.</p>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+      <div>
+        <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--light);margin-bottom:6px">Activities in this status</div>
+        <div class="text-sm text-muted" style="line-height:1.8">
+          ✅ &nbsp;DoI checklist validated<br>
+          ✅ &nbsp;Test environment availability confirmed<br>
+          ✅ &nbsp;Test cases reviewed/linked<br>
+          ✅ &nbsp;QA handoff acknowledged
+        </div>
+      </div>
+      <div>
+        <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--light);margin-bottom:6px">Transitions</div>
+        <div class="text-sm text-muted" style="line-height:1.8">
+          <span style="color:var(--teal-t)">→</span> &nbsp;In Test (execution starts)<br>
+          <span style="color:var(--amber-t)">→</span> &nbsp;On Hold (env/dependency blocker)<br><br>
+          <strong>Bottleneck signal:</strong><br>
+          Growing queue indicates QA capacity or environment bottlenecks
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card" style="border-left:4px solid var(--teal-b);order:6">
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;flex-wrap:wrap">
+      <span class="chip" style="background:var(--teal-f);border-color:var(--teal-b);color:var(--teal-t)">🔬 In Test</span>
+      <span class="tag" style="background:var(--bg2);border-color:var(--border);color:var(--muted)">Jira: In Test</span>
+      <span class="tag" style="background:var(--bg2);border-color:var(--border);color:var(--muted)">Owner: QA Engineer</span>
+      <span class="tag" style="background:var(--teal-f);border-color:var(--teal-b);color:var(--teal-t);font-size:10px">KPI: Test TAT</span>
+    </div>
+    <p class="text-sm text-muted mb12">QA is actively validating acceptance criteria, regression impact, and defect outcomes. This status is execution-intensive and should produce clear evidence trails.</p>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+      <div>
+        <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--light);margin-bottom:6px">Activities in this status</div>
+        <div class="text-sm text-muted" style="line-height:1.8">
+          ✅ &nbsp;AC-based tests executed<br>
+          ✅ &nbsp;Regression checks completed<br>
+          ✅ &nbsp;Defects logged and triaged<br>
+          ✅ &nbsp;Evidence captured for handoff
+        </div>
+      </div>
+      <div>
+        <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--light);margin-bottom:6px">Transitions</div>
+        <div class="text-sm text-muted" style="line-height:1.8">
+          <span style="color:var(--teal-t)">→</span> &nbsp;Ready for Acceptance (with test evidence)<br>
+          <span style="color:var(--red-t)">← </span> &nbsp;In Progress (if defect found)<br>
+          <span style="color:var(--amber-t)">→</span> &nbsp;On Hold (if blocked)<br><br>
+          <strong>Bottleneck signal:</strong><br>
+          Repeated bounce-back indicates quality gate weakness upstream
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card" style="border-left:4px solid var(--teal-b);order:7">
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;flex-wrap:wrap">
+      <span class="chip" style="background:var(--teal-f);border-color:var(--teal-b);color:var(--teal-t)">👁 Ready for Acceptance</span>
+      <span class="tag" style="background:var(--bg2);border-color:var(--border);color:var(--muted)">Jira: Ready for Acceptance</span>
+      <span class="tag" style="background:var(--bg2);border-color:var(--border);color:var(--muted)">Owner: Product Owner</span>
+      <span class="tag" style="background:var(--teal-f);border-color:var(--teal-b);color:var(--teal-t);font-size:10px">KPI: UAT TAT</span>
+    </div>
+    <p class="text-sm text-muted mb12">QA execution is complete and evidence has been submitted. The story is now waiting for business acceptance, UAT sign-off, and closure readiness checks.</p>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+      <div>
+        <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--light);margin-bottom:6px">Activities in this status</div>
+        <div class="text-sm text-muted" style="line-height:1.8">
+          ✅ &nbsp;PO reviews delivered behavior<br>
+          ✅ &nbsp;Business validation notes recorded<br>
+          ✅ &nbsp;UAT sign-off captured<br>
+          ✅ &nbsp;DoD closure prep initiated
+        </div>
+      </div>
+      <div>
+        <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--light);margin-bottom:6px">Transitions</div>
+        <div class="text-sm text-muted" style="line-height:1.8">
+          <span style="color:var(--teal-t)">→</span> &nbsp;Closed (after DoD screen)<br>
+          <span style="color:var(--red-t)">← </span> &nbsp;In Progress (if UAT rejects)<br><br>
+          <strong>Bottleneck signal:</strong><br>
+          Long acceptance delays indicate stakeholder response lag
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card" style="border-left:4px solid var(--green-b);order:8">
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;flex-wrap:wrap">
+      <span class="chip" style="background:var(--green-f);border-color:var(--green-b);color:var(--green-t)">✅ Closed</span>
+      <span class="tag" style="background:var(--bg2);border-color:var(--border);color:var(--muted)">Jira: Closed</span>
+      <span class="tag" style="background:var(--bg2);border-color:var(--border);color:var(--muted)">Owner: Release Manager / PO</span>
+      <span class="tag" style="background:var(--green-f);border-color:var(--green-b);color:var(--green-t);font-size:10px">KPI: Throughput</span>
+    </div>
+    <p class="text-sm text-muted mb12">The story is fully done, accepted, and closed after DoD completion. All required evidence and release artifacts are in place for traceability.</p>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+      <div>
+        <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--light);margin-bottom:6px">Activities in this status</div>
+        <div class="text-sm text-muted" style="line-height:1.8">
+          ✅ &nbsp;DoD checklist completed<br>
+          ✅ &nbsp;Release notes updated<br>
+          ✅ &nbsp;Deployment/status confirmation recorded<br>
+          ✅ &nbsp;Ticket frozen for audit trail
+        </div>
+      </div>
+      <div>
+        <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--light);margin-bottom:6px">Transitions</div>
+        <div class="text-sm text-muted" style="line-height:1.8">
+          <span style="color:var(--teal-t)">✓</span> &nbsp;Terminal workflow state<br>
+          <span style="color:var(--red-t)">↺</span> &nbsp;Reopen only via governance exception<br><br>
+          <strong>Bottleneck signal:</strong><br>
+          High reopen rate indicates poor DoD rigor
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card" style="border-left:4px solid var(--amber-b);order:9">
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;flex-wrap:wrap">
+      <span class="chip" style="background:var(--amber-f);border-color:var(--amber-b);color:var(--amber-t)">⚠️ On Hold</span>
+      <span class="tag" style="background:var(--bg2);border-color:var(--border);color:var(--muted)">Jira: On Hold</span>
+      <span class="tag" style="background:var(--bg2);border-color:var(--border);color:var(--muted)">Owner: Scrum Master</span>
+      <span class="tag" style="background:var(--amber-f);border-color:var(--amber-b);color:var(--amber-t);font-size:10px">KPI: Block time</span>
+    </div>
+    <p class="text-sm text-muted mb12">This is a controlled pause status for active blockers. Entry requires blocker logging, ownership, and an expected resolution path before work can resume.</p>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+      <div>
+        <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--light);margin-bottom:6px">Activities in this status</div>
+        <div class="text-sm text-muted" style="line-height:1.8">
+          ✅ &nbsp;Blocker reason captured
+          <br>✅ &nbsp;Dependency owner and ETA documented
+          <br>✅ &nbsp;Escalation path defined
+          <br>✅ &nbsp;Daily unblock follow-up tracked
+        </div>
+      </div>
+      <div>
+        <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--light);margin-bottom:6px">Transitions</div>
+        <div class="text-sm text-muted" style="line-height:1.8">
+          <span style="color:var(--teal-t)">→</span> &nbsp;Return to previous active status when unblocked<br>
+          <span style="color:var(--red-t)">!</span> &nbsp;Escalate if blocker exceeds SLA window<br><br>
+          <strong>Bottleneck signal:</strong><br>
+          Rising hold-time trend highlights systemic dependency management issues
+        </div>
+      </div>
+    </div>
+  </div>
+
+  </div>
+
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     TAB 3 — TRANSITION SCREENS
+═══════════════════════════════════════════════════════════ -->
+<div class="tab-page" id="tab-screens">
+
+  <div class="callout tip">
+    <div class="callout-icon">🖥</div>
+    <div><strong>Click any screen card</strong> to open the full interactive Jira transition screen mockup. The flowchart below shows every status, all possible transitions, and which connections trigger a screen. Screens with a coloured border on the flowchart connector require completion before the transition is allowed.</div>
+  </div>
+
+  <!-- ── FLOWCHART ───────────────────────────────────────── -->
+  <h2>🔀 Status transition flowchart</h2>
+  <div style="background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin-bottom:24px;" class="flow-container">
+
+    <svg id="flow-svg" viewBox="0 0 1100 555" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet" style="width:100%;height:auto;display:block;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;overflow:auto">
+      <defs>
+        <!-- arrow markers -->
+        <marker id="arr-gray" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="#97A0AF"/></marker>
+        <marker id="arr-blue" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="#4C9AFF"/></marker>
+        <marker id="arr-amber" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="#F6C90E"/></marker>
+        <marker id="arr-purple" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="#8777D9"/></marker>
+        <marker id="arr-teal" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="#36B37E"/></marker>
+        <marker id="arr-green" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="#00875A"/></marker>
+        <marker id="arr-red" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="#FF5630"/></marker>
+        <marker id="arr-orange" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="#FF991F"/></marker>
+      </defs>
+
+      <!-- ═══ MAIN FORWARD FLOW (all on y-center = 80) ═══ -->
+      
+      <!-- New -->
+      <rect x="20" y="62" width="76" height="36" rx="18" fill="#F4F5F7" stroke="#C1C7D0" stroke-width="1.5"/>
+      <text x="58" y="75" text-anchor="middle" font-size="11" font-weight="600" fill="#42526E">📥 New</text>
+      <text x="58" y="89" text-anchor="middle" font-size="9" fill="#97A0AF">0% · PO</text>
+
+      <!-- Arrow New→InAnalysis -->
+      <line x1="96" y1="80" x2="124" y2="80" stroke="#97A0AF" stroke-width="1.5" marker-end="url(#arr-gray)"/>
+
+      <!-- In Analysis -->
+      <rect x="126" y="62" width="86" height="36" rx="18" fill="#FFF0B3" stroke="#FF991F" stroke-width="1.5"/>
+      <text x="169" y="75" text-anchor="middle" font-size="10" font-weight="600" fill="#7A4200">🔍 In Analysis</text>
+      <text x="169" y="89" text-anchor="middle" font-size="9" fill="#97A0AF">10% · BA</text>
+
+      <!-- Arrow InAnalysis→DoR gate (horizontally aligned) -->
+      <line x1="212" y1="80" x2="238" y2="80" stroke="#F6C90E" stroke-width="2" marker-end="url(#arr-amber)"/>
+      <!-- Screen badge on DoR arrow -->
+      <rect x="218" y="66" width="22" height="10" rx="3" fill="#FFFAE6" stroke="#F6C90E" stroke-width="1"/>
+      <text x="229" y="74" text-anchor="middle" font-size="7" font-weight="700" fill="#974F0C">DoR</text>
+
+      <!-- DoR Gate diamond (centered at y=80) -->
+      <g transform="translate(255,80) rotate(45)"><rect x="-12" y="-12" width="24" height="24" rx="2" fill="#FFFAE6" stroke="#F6C90E" stroke-width="2"/></g>
+      <text x="255" y="77" text-anchor="middle" font-size="8" font-weight="800" fill="#974F0C">DoR</text>
+      <text x="255" y="89" text-anchor="middle" font-size="7" fill="#974F0C">gate</text>
+
+      <!-- Arrow DoR→RFI (horizontally aligned) -->
+      <line x1="273" y1="80" x2="299" y2="80" stroke="#4C9AFF" stroke-width="2" marker-end="url(#arr-blue)"/>
+
+      <!-- Ready for Implementation -->
+      <rect x="301" y="59" width="98" height="42" rx="8" fill="#DEEBFF" stroke="#4C9AFF" stroke-width="1.5"/>
+      <text x="350" y="75" text-anchor="middle" font-size="9.5" font-weight="700" fill="#0747A6">🚀 Ready for</text>
+      <text x="350" y="88" text-anchor="middle" font-size="9.5" font-weight="700" fill="#0747A6">Implementation</text>
+      <text x="350" y="99" text-anchor="middle" font-size="8" fill="#97A0AF">20% · Dev</text>
+
+      <!-- Arrow RFI→InProgress -->
+      <line x1="399" y1="80" x2="423" y2="80" stroke="#4C9AFF" stroke-width="2" marker-end="url(#arr-blue)"/>
+
+      <!-- In Progress -->
+      <rect x="425" y="62" width="88" height="36" rx="8" fill="#DEEBFF" stroke="#4C9AFF" stroke-width="1.5"/>
+      <text x="469" y="76" text-anchor="middle" font-size="10" font-weight="700" fill="#0747A6">⚙️ In Progress</text>
+      <text x="469" y="89" text-anchor="middle" font-size="8" fill="#97A0AF">45% · Dev+Rev</text>
+
+      <!-- Arrow InProgress→DoI gate (horizontally aligned) -->
+      <line x1="513" y1="80" x2="539" y2="80" stroke="#8777D9" stroke-width="2" marker-end="url(#arr-purple)"/>
+      <!-- Screen badge on DoI arrow -->
+      <rect x="517" y="66" width="20" height="10" rx="3" fill="#EAE6FF" stroke="#8777D9" stroke-width="1"/>
+      <text x="527" y="74" text-anchor="middle" font-size="7" font-weight="700" fill="#403294">DoI</text>
+
+      <!-- DoI Gate diamond (centered at y=80) -->
+      <g transform="translate(556,80) rotate(45)"><rect x="-12" y="-12" width="24" height="24" rx="2" fill="#EAE6FF" stroke="#8777D9" stroke-width="2"/></g>
+      <text x="556" y="77" text-anchor="middle" font-size="8" font-weight="800" fill="#403294">DoI</text>
+      <text x="556" y="89" text-anchor="middle" font-size="7" fill="#403294">gate</text>
+
+      <!-- Arrow DoI→RFT (horizontally aligned) -->
+      <line x1="574" y1="80" x2="599" y2="80" stroke="#36B37E" stroke-width="2" marker-end="url(#arr-teal)"/>
+
+      <!-- Ready for Testing -->
+      <rect x="601" y="62" width="82" height="36" rx="8" fill="#E3FCEF" stroke="#36B37E" stroke-width="1.5"/>
+      <text x="642" y="75" text-anchor="middle" font-size="9.5" font-weight="700" fill="#006644">🧪 Ready for</text>
+      <text x="642" y="88" text-anchor="middle" font-size="9.5" font-weight="700" fill="#006644">Testing</text>
+      <text x="642" y="99" text-anchor="middle" font-size="8" fill="#97A0AF">60% · QA</text>
+
+      <!-- Arrow RFT→InTest -->
+      <line x1="683" y1="80" x2="705" y2="80" stroke="#36B37E" stroke-width="2" marker-end="url(#arr-teal)"/>
+
+      <!-- In Test -->
+      <rect x="707" y="62" width="72" height="36" rx="8" fill="#E3FCEF" stroke="#36B37E" stroke-width="1.5"/>
+      <text x="743" y="76" text-anchor="middle" font-size="10" font-weight="700" fill="#006644">🔬 In Test</text>
+      <text x="743" y="89" text-anchor="middle" font-size="8" fill="#97A0AF">75% · QA</text>
+
+      <!-- Arrow InTest→RFA (straight horizontal) -->
+      <line x1="779" y1="80" x2="815" y2="80" stroke="#36B37E" stroke-width="2" marker-end="url(#arr-teal)"/>
+      <!-- Screen badge on InTest→RFA -->
+      <rect x="788" y="66" width="36" height="12" rx="3" fill="#E3FCEF" stroke="#36B37E" stroke-width="1"/>
+      <text x="806" y="75" text-anchor="middle" font-size="7" font-weight="700" fill="#006644">TEST EV</text>
+
+      <!-- Ready for Acceptance (right side, same row) -->
+      <rect x="817" y="59" width="96" height="42" rx="8" fill="#E3FCEF" stroke="#36B37E" stroke-width="1.5"/>
+      <text x="865" y="75" text-anchor="middle" font-size="9.5" font-weight="700" fill="#006644">👁 Ready for</text>
+      <text x="865" y="88" text-anchor="middle" font-size="9.5" font-weight="700" fill="#006644">Acceptance</text>
+      <text x="865" y="99" text-anchor="middle" font-size="8" fill="#97A0AF">88% · PO</text>
+
+      <!-- Arrow RFA→DoD gate (straight horizontal) -->
+      <line x1="913" y1="80" x2="939" y2="80" stroke="#00875A" stroke-width="2" marker-end="url(#arr-green)"/>
+      <!-- Screen badge on RFA→DoD -->
+      <rect x="918" y="66" width="22" height="10" rx="3" fill="#E3FCEF" stroke="#00875A" stroke-width="1"/>
+      <text x="929" y="74" text-anchor="middle" font-size="7" font-weight="700" fill="#006644">DoD</text>
+
+      <!-- DoD gate diamond (centered at y=80) -->
+      <g transform="translate(956,80) rotate(45)"><rect x="-12" y="-12" width="24" height="24" rx="2" fill="#E3FCEF" stroke="#00875A" stroke-width="2"/></g>
+      <text x="956" y="77" text-anchor="middle" font-size="8" font-weight="800" fill="#006644">DoD</text>
+      <text x="956" y="89" text-anchor="middle" font-size="7" fill="#006644">gate</text>
+
+      <!-- Arrow DoD→Closed (straight horizontal) -->
+      <line x1="974" y1="80" x2="1000" y2="80" stroke="#00875A" stroke-width="2" marker-end="url(#arr-green)"/>
+
+      <!-- Closed -->
+      <rect x="1002" y="62" width="68" height="36" rx="18" fill="#E3FCEF" stroke="#00875A" stroke-width="2"/>
+      <text x="1036" y="76" text-anchor="middle" font-size="10" font-weight="700" fill="#006644">✅ Closed</text>
+      <text x="1036" y="89" text-anchor="middle" font-size="8" fill="#97A0AF">100% 🚀</text>
+
+      <!-- ═══ ON HOLD (bottom) ═══ -->
+      <!-- On Hold box -->
+      <rect x="352" y="310" width="98" height="40" rx="8" fill="#FFFAE6" stroke="#F6C90E" stroke-width="2"/>
+      <text x="401" y="325" text-anchor="middle" font-size="10" font-weight="700" fill="#974F0C">⚠️ On Hold</text>
+      <text x="401" y="338" text-anchor="middle" font-size="8" fill="#974F0C">Block time KPI</text>
+      <!-- Screen badge -->
+      <rect x="382" y="299" width="38" height="12" rx="3" fill="#FFFAE6" stroke="#F6C90E" stroke-width="1"/>
+      <text x="401" y="308" text-anchor="middle" font-size="7" font-weight="700" fill="#974F0C">BLOCKER LOG</text>
+
+      <!-- Entry arrows to On Hold from statuses -->
+      <!-- From In Progress (469,98) → down to On Hold (401,310) -->
+      <path d="M469,98 L469,240 L450,240 L450,310" fill="none" stroke="#FF991F" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#arr-orange)"/>
+      <text x="430" y="170" font-size="8" fill="#FF991F" font-weight="600">hold</text>
+
+      <!-- From Ready for Testing (642,98) → down to On Hold -->
+      <path d="M642,98 L642,245 L430,245 L430,310" fill="none" stroke="#FF991F" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#arr-orange)"/>
+
+      <!-- From In Test (743,98) → down to On Hold -->
+      <path d="M743,98 L743,250 L440,250 L440,310" fill="none" stroke="#FF991F" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#arr-orange)"/>
+
+      <!-- Exit arrows from On Hold back to statuses -->
+      <path d="M401,310 L401,280 L469,280 L469,98" fill="none" stroke="#FF5630" stroke-width="1.5" stroke-dasharray="4,3" marker-end="url(#arr-red)"/>
+      <text x="480" y="190" font-size="8" fill="#FF5630" font-weight="600">resume</text>
+
+      <!-- ═══ BACK TRANSITIONS (red dashed) ═══ -->
+      <!-- In Progress back to Ready for Implementation -->
+      <path d="M469,62 L469,40 L350,40 L350,59" fill="none" stroke="#FF5630" stroke-width="1.2" stroke-dasharray="4,3" marker-end="url(#arr-red)"/>
+
+      <!-- In Test back to In Progress -->
+      <path d="M707,62 L707,24 L469,24 L469,62" fill="none" stroke="#FF5630" stroke-width="1.2" stroke-dasharray="4,3" marker-end="url(#arr-red)"/>
+      <text x="588" y="20" text-anchor="middle" font-size="8" fill="#FF5630">defect found → back to In Progress</text>
+
+      <!-- Ready for Acceptance back to In Progress (routed above flow) -->
+      <path d="M865,59 L865,14 L469,14 L469,62" fill="none" stroke="#FF5630" stroke-width="1.2" stroke-dasharray="4,3" marker-end="url(#arr-red)"/>
+
+      <!-- In Analysis back to New -->
+      <path d="M169,62 L169,50 L58,50 L58,62" fill="none" stroke="#FF5630" stroke-width="1.2" stroke-dasharray="4,3" marker-end="url(#arr-red)"/>
+
+      <!-- ═══ KPI measurement spans (22px spacing) ═══ -->
+      <!-- Lead time (widest) -->
+      <line x1="20" y1="408" x2="1070" y2="408" stroke="#4C9AFF" stroke-width="1.5"/>
+      <line x1="20" y1="406" x2="20" y2="412" stroke="#4C9AFF" stroke-width="1.5"/>
+      <line x1="1070" y1="406" x2="1070" y2="412" stroke="#4C9AFF" stroke-width="1.5"/>
+      <text x="545" y="422" text-anchor="middle" font-size="9" fill="#0747A6" font-weight="600">Lead time (New → Closed)</text>
+
+      <!-- Cycle time (mid) -->
+      <line x1="301" y1="386" x2="1070" y2="386" stroke="#8777D9" stroke-width="1.5"/>
+      <line x1="301" y1="384" x2="301" y2="390" stroke="#8777D9" stroke-width="1.5"/>
+      <line x1="1070" y1="384" x2="1070" y2="390" stroke="#8777D9" stroke-width="1.5"/>
+      <text x="685" y="380" text-anchor="middle" font-size="9" fill="#403294" font-weight="600">Cycle time (Ready for Impl. → Closed)</text>
+
+      <!-- Test TAT (narrowest) -->
+      <line x1="601" y1="364" x2="1070" y2="364" stroke="#36B37E" stroke-width="1.5"/>
+      <line x1="601" y1="362" x2="601" y2="368" stroke="#36B37E" stroke-width="1.5"/>
+      <line x1="1070" y1="362" x2="1070" y2="368" stroke="#36B37E" stroke-width="1.5"/>
+      <text x="835" y="358" text-anchor="middle" font-size="9" fill="#006644" font-weight="600">Test TAT</text>
+
+      <!-- ═══ LEGEND (bottom-right corner) ═══ -->
+      <!-- box tall enough for 5 rows at 18px spacing + 14px title + 12px padding top/bottom -->
+      <rect x="900" y="434" width="185" height="112" rx="6" fill="#F7F8FA" stroke="#DFE1E6" stroke-width="1"/>
+      <text x="913" y="449" font-size="11" font-weight="700" fill="#5E6C84">LEGEND</text>
+
+      <!-- Row 1: Status box example (y-centre 462) -->
+      <rect x="913" y="454" width="36" height="16" rx="8" fill="#DEEBFF" stroke="#4C9AFF" stroke-width="1.5"/>
+      <text x="957" y="466" font-size="10" fill="#5E6C84">Status (forward flow)</text>
+
+      <!-- Row 2: Quality gate example (y-centre 482) — 20px below row 1 -->
+      <g transform="translate(931,482)"><polygon points="0,-8 8,-4 8,4 0,8 -8,4 -8,-4" fill="#FFFAE6" stroke="#F6C90E" stroke-width="1.5"/></g>
+      <text x="957" y="486" font-size="10" fill="#5E6C84">Quality gate</text>
+
+      <!-- Row 3: Forward transition (y 500) -->
+      <line x1="913" y1="500" x2="949" y2="500" stroke="#4C9AFF" stroke-width="2" marker-end="url(#arr-blue)"/>
+      <text x="957" y="504" font-size="10" fill="#5E6C84">Forward transition</text>
+
+      <!-- Row 4: Back transition (y 517) -->
+      <line x1="913" y1="517" x2="949" y2="517" stroke="#FF5630" stroke-width="1.5" stroke-dasharray="4,3" marker-end="url(#arr-red)"/>
+      <text x="957" y="521" font-size="10" fill="#5E6C84">Back transition</text>
+
+      <!-- Row 5: On Hold entry (y 534) -->
+      <line x1="913" y1="534" x2="949" y2="534" stroke="#FF991F" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#arr-orange)"/>
+      <text x="957" y="538" font-size="10" fill="#5E6C84">On Hold entry</text>
+
+    </svg>
+  </div>
+
+  <!-- ── SCREEN CARDS ────────────────────────────────────── -->
+  <h2>🖥 Transition screen designs</h2>
+  <p class="section-intro">Click any card to open the interactive mockup. All screens must be fully completed before Jira allows the transition.</p>
+
+  <div class="screen-grid">
+
+    <!-- DoR -->
+    <div class="screen-card" onclick="openModal('modal-dor')">
+      <div class="screen-card-top">
+        <div class="screen-card-trigger"><span style="background:var(--amber-f);color:var(--amber-t);padding:1px 6px;border-radius:3px;font-weight:800">DoR</span> Triggered on transition</div>
+        <div class="screen-card-name">📥→🔍 In Analysis → 🚀 Ready for Implementation</div>
+        <div class="screen-card-arrow">Before sprint commitment · PO / Scrum Master only</div>
+      </div>
+      <div class="screen-card-preview">
+        <div class="preview-check"><div class="preview-box"></div>AC written in Given/When/Then</div>
+        <div class="preview-check"><div class="preview-box"></div>Story points estimated (poker)</div>
+        <div class="preview-check"><div class="preview-box"></div>Dependencies cleared, owner named</div>
+        <div class="preview-check"><div class="preview-box"></div>Technical approach agreed</div>
+        <div class="preview-check"><div class="preview-box"></div>Testability assessed (testable/not)</div>
+        <div class="preview-check"><div class="preview-box"></div>Test case count estimated</div>
+        <div class="preview-check"><div class="preview-box"></div>PO commits to sprint</div>
+      </div>
+      <div class="screen-card-footer">🖱 Click for full mockup · <span style="color:var(--amber-t);font-weight:600">7 checkpoints</span></div>
+    </div>
+
+    <!-- DoI -->
+    <div class="screen-card" onclick="openModal('modal-doi')">
+      <div class="screen-card-top">
+        <div class="screen-card-trigger"><span style="background:var(--purple-f);color:var(--purple-t);padding:1px 6px;border-radius:3px;font-weight:800">DoI</span> Triggered on transition</div>
+        <div class="screen-card-name">⚙️ In Progress → 🧪 Ready for Testing</div>
+        <div class="screen-card-arrow">Before QA receives story · Developer / Tech Lead only</div>
+      </div>
+      <div class="screen-card-preview">
+        <div class="preview-check"><div class="preview-box"></div>Dev functional testing on own sandbox</div>
+        <div class="preview-check"><div class="preview-box"></div>Unit test coverage ≥ 80%</div>
+        <div class="preview-check"><div class="preview-box"></div>Deployment to staging recognised</div>
+        <div class="preview-check"><div class="preview-box"></div>PR merged after review (×2 approvals)</div>
+        <div class="preview-check"><div class="preview-box"></div>If new ext. dependency: license cleared</div>
+        <div class="preview-check"><div class="preview-box"></div>New dependency added to dep. table</div>
+      </div>
+      <div class="screen-card-footer">🖱 Click for full mockup · <span style="color:var(--purple-t);font-weight:600">6 checkpoints</span></div>
+    </div>
+
+    <!-- Test Evidence -->
+    <div class="screen-card" onclick="openModal('modal-testev')">
+      <div class="screen-card-top">
+        <div class="screen-card-trigger"><span style="background:var(--teal-f);color:var(--teal-t);padding:1px 6px;border-radius:3px;font-weight:800">TEST</span> Triggered on transition</div>
+        <div class="screen-card-name">🔬 In Test → 👁 Ready for Acceptance</div>
+        <div class="screen-card-arrow">After QA sign-off · Before PO is invited to UAT</div>
+      </div>
+      <div class="screen-card-preview">
+        <div class="preview-check"><div class="preview-box"></div>All AC test cases executed + passed</div>
+        <div class="preview-check"><div class="preview-box"></div>Test execution report attached</div>
+        <div class="preview-check"><div class="preview-box"></div>Regression suite passed (0 P1/P2)</div>
+        <div class="preview-check"><div class="preview-box"></div>Test steps documented in Zephyr/Xray</div>
+        <div class="preview-check"><div class="preview-box"></div>Zero open defects on this story</div>
+      </div>
+      <div class="screen-card-footer">🖱 Click for full mockup · <span style="color:var(--teal-t);font-weight:600">5 checkpoints + QA summary</span></div>
+    </div>
+
+    <!-- DoD -->
+    <div class="screen-card" onclick="openModal('modal-dod')">
+      <div class="screen-card-top">
+        <div class="screen-card-trigger"><span style="background:var(--green-f);color:var(--green-t);padding:1px 6px;border-radius:3px;font-weight:800">DoD</span> Triggered on transition</div>
+        <div class="screen-card-name">👁 Ready for Acceptance → ✅ Closed</div>
+        <div class="screen-card-arrow">Final gate · PO / Release Manager only</div>
+      </div>
+      <div class="screen-card-preview">
+        <div class="preview-check"><div class="preview-box"></div>All ACs verified + checked off</div>
+        <div class="preview-check"><div class="preview-box"></div>QA engineer sign-off recorded</div>
+        <div class="preview-check"><div class="preview-box"></div>UAT approved by PO</div>
+        <div class="preview-check"><div class="preview-box"></div>Regression clean — zero P1/P2</div>
+        <div class="preview-check"><div class="preview-box"></div>Release note entry added</div>
+        <div class="preview-check"><div class="preview-box"></div>Downstream stories notified</div>
+        <div class="preview-check"><div class="preview-box"></div>Deployed to production</div>
+      </div>
+      <div class="screen-card-footer">🖱 Click for full mockup · <span style="color:var(--green-t);font-weight:600">7 checkpoints</span></div>
+    </div>
+
+    <!-- On Hold -->
+    <div class="screen-card" onclick="openModal('modal-onhold')">
+      <div class="screen-card-top">
+        <div class="screen-card-trigger"><span style="background:var(--amber-f);color:var(--amber-t);padding:1px 6px;border-radius:3px;font-weight:800">BLOCK</span> Any → On Hold</div>
+        <div class="screen-card-name">⚠️ Moving to On Hold — Blocker Log</div>
+        <div class="screen-card-arrow">From In Progress, Ready for Testing, or In Test</div>
+      </div>
+      <div class="screen-card-preview">
+        <div style="font-size:10px;color:var(--muted);padding:4px 0 2px">Blocker type (required dropdown)</div>
+        <div style="background:var(--bg3);border:1px solid var(--border);border-radius:3px;padding:4px 8px;font-size:10px;color:var(--light);margin-bottom:7px">API / Environment / Decision / Cross-team / Other</div>
+        <div style="font-size:10px;color:var(--muted);padding:2px 0">Owning team / person + ETA date</div>
+        <div style="font-size:10px;color:var(--muted);padding:2px 0">Blocker description (free text)</div>
+        <div style="font-size:10px;color:#0747A6;margin-top:8px">📧 Auto-notifies Scrum Master on submit</div>
+      </div>
+      <div class="screen-card-footer">🖱 Click for full mockup · <span style="color:var(--amber-t);font-weight:600">Mandatory — all fields required</span></div>
+    </div>
+
+  </div>
+
+</div><!-- end tab-screens -->
+
+</div><!-- end .page -->
+
+<!-- ═══════════════════════════════════════════════════════
+     MODALS
+═══════════════════════════════════════════════════════ -->
+
+<!-- DoR Modal -->
+<div class="modal-overlay" id="modal-dor">
+  <div class="modal">
+    <div class="modal-header">
+      <div>
+        <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--amber-t);margin-bottom:4px">Jira Transition Screen · DoR</div>
+        <div style="font-size:17px;font-weight:700">Definition of Ready Checklist</div>
+        <div class="transition-arrow mt8">
+          <span class="chip" style="background:var(--orange-f);border-color:var(--orange-b);color:var(--orange-t)">🔍 In Analysis</span>
+          <span style="color:var(--amber-t);font-size:16px;font-weight:700">→</span>
+          <span class="chip" style="background:var(--blue-f);border-color:var(--blue-b);color:var(--blue-t)">🚀 Ready for Implementation</span>
+          <span class="tag" style="background:var(--amber-f);border-color:var(--amber-b);color:var(--amber-t);margin-left:auto;font-size:10px">PO / Scrum Master only</span>
+        </div>
+      </div>
+      <button class="modal-close" onclick="closeModal('modal-dor')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="jira-warning" style="background:var(--amber-f);border:1px solid var(--amber-b);color:var(--amber-t)">
+        <span style="font-size:16px">⚠️</span>
+        <div class="text-sm">All criteria must be checked before this story can enter a sprint. <strong>Unchecked items block the transition.</strong> The Jira transition will fail if any box is unticked.</div>
+      </div>
+      <div class="jira-screen">
+        <div class="jira-screen-bar">🔷 Definition of Ready — All items required to proceed</div>
+        <div class="jira-screen-body">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+            <div class="jira-field-label" style="margin:0">Readiness checklist</div>
+            <div class="progress-ring" id="dor-prog">0 / 7</div>
+          </div>
+
+          <div class="jira-check-section">
+            <div class="jira-check-hd" style="background:var(--amber-f);color:var(--amber-t)">📋 Acceptance &amp; Estimation</div>
+            <div class="jira-check-item" onclick="toggleCheck(this,'dor-prog',7)">
+              <div class="jira-checkbox">✓</div>
+              <div class="jira-check-text"><strong>Acceptance criteria</strong> written in Given / When / Then format and attached to the story description</div>
+            </div>
+            <div class="jira-check-item" onclick="toggleCheck(this,'dor-prog',7)">
+              <div class="jira-checkbox">✓</div>
+              <div class="jira-check-text"><strong>Story points</strong> estimated via team planning poker — consensus reached and recorded</div>
+            </div>
+          </div>
+
+          <div class="jira-check-section">
+            <div class="jira-check-hd" style="background:var(--amber-f);color:var(--amber-t)">🔗 Dependencies &amp; Design</div>
+            <div class="jira-check-item" onclick="toggleCheck(this,'dor-prog',7)">
+              <div class="jira-checkbox">✓</div>
+              <div class="jira-check-text"><strong>Dependencies</strong> identified — owner named and delivery date confirmed in Jira dependency field</div>
+            </div>
+            <div class="jira-check-item" onclick="toggleCheck(this,'dor-prog',7)">
+              <div class="jira-checkbox">✓</div>
+              <div class="jira-check-text"><strong>Technical approach</strong> agreed — design notes or architecture decision record (ADR) attached to the ticket</div>
+            </div>
+          </div>
+
+          <div class="jira-check-section">
+            <div class="jira-check-hd" style="background:var(--amber-f);color:var(--amber-t)">🧪 QA Readiness</div>
+            <div class="jira-check-item" onclick="toggleCheck(this,'dor-prog',7)">
+              <div class="jira-checkbox">✓</div>
+              <div class="jira-check-text"><strong>Testability assessment completed</strong> — story is classified as Testable or Not Testable, with justification noted in the ticket</div>
+            </div>
+            <div class="jira-check-item" onclick="toggleCheck(this,'dor-prog',7)">
+              <div class="jira-checkbox">✓</div>
+              <div class="jira-check-text"><strong>Test case count estimated</strong> — expected number of test cases documented (e.g. "3 positive, 2 negative, 1 edge case") to allow QA capacity planning</div>
+            </div>
+            <div class="jira-note">If Not Testable: clearly state why (e.g. infrastructure-only change with no functional behaviour) and confirm with QA Lead before proceeding.</div>
+          </div>
+
+          <div class="jira-check-section">
+            <div class="jira-check-hd" style="background:var(--amber-f);color:var(--amber-t)">✅ Sprint Commitment</div>
+            <div class="jira-check-item" onclick="toggleCheck(this,'dor-prog',7)">
+              <div class="jira-checkbox">✓</div>
+              <div class="jira-check-text"><strong>Product Owner formally commits</strong> this story to the sprint — sprint field confirmed in Jira</div>
+            </div>
+          </div>
+
+          <div class="mt12">
+            <div class="jira-field-label">Additional notes (optional)</div>
+            <textarea class="jira-textarea" placeholder="Sprint-specific context, known risks, testability rationale, or conditions agreed at planning..."></textarea>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="jira-btn jira-btn-secondary" onclick="closeModal('modal-dor')">Cancel</button>
+      <button class="jira-btn jira-btn-primary" onclick="confirmTransition('modal-dor','🚀 Ready for Implementation','dor-prog',7)">Confirm transition →</button>
+    </div>
+  </div>
+</div>
+
+<!-- DoI Modal -->
+<div class="modal-overlay" id="modal-doi">
+  <div class="modal">
+    <div class="modal-header">
+      <div>
+        <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--purple-t);margin-bottom:4px">Jira Transition Screen · DoI</div>
+        <div style="font-size:17px;font-weight:700">Definition of Implemented Checklist</div>
+        <div class="transition-arrow mt8">
+          <span class="chip" style="background:var(--blue-f);border-color:var(--blue-b);color:var(--blue-t)">⚙️ In Progress</span>
+          <span style="color:var(--purple-t);font-size:16px;font-weight:700">→</span>
+          <span class="chip" style="background:var(--teal-f);border-color:var(--teal-b);color:var(--teal-t)">🧪 Ready for Testing</span>
+          <span class="tag" style="background:var(--purple-f);border-color:var(--purple-b);color:var(--purple-t);margin-left:auto;font-size:10px">Developer / Tech Lead only</span>
+        </div>
+      </div>
+      <button class="modal-close" onclick="closeModal('modal-doi')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="jira-warning" style="background:var(--purple-f);border:1px solid var(--purple-b);color:var(--purple-t)">
+        <span style="font-size:16px">🔷</span>
+        <div class="text-sm">The developer confirms that the implementation is complete, self-tested, and ready for independent QA. <strong>Do not hand over a story with an untested integration path, a failed build, or uncleared external dependencies.</strong></div>
+      </div>
+      <div class="jira-screen">
+        <div class="jira-screen-bar" style="background:var(--purple)">🔷 Definition of Implemented — Developer confirmation required</div>
+        <div class="jira-screen-body">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+            <div class="jira-field-label" style="margin:0">Implementation checklist</div>
+            <div class="progress-ring" id="doi-prog">0 / 6</div>
+          </div>
+
+          <div class="jira-check-section">
+            <div class="jira-check-hd" style="background:var(--purple-f);color:var(--purple-t)">🧑‍💻 Developer Self-Testing</div>
+            <div class="jira-check-item" onclick="toggleCheck(this,'doi-prog',6)">
+              <div class="jira-checkbox">✓</div>
+              <div class="jira-check-text"><strong>Functional testing by developer completed</strong> on the individual developer sandbox — all acceptance criteria scenarios manually verified before handoff to QA</div>
+            </div>
+            <div class="jira-check-item" onclick="toggleCheck(this,'doi-prog',6)">
+              <div class="jira-checkbox">✓</div>
+              <div class="jira-check-text"><strong>Unit test code coverage ≥ 80%</strong> — coverage report generated and result noted below (attach or paste coverage % per class/method)</div>
+            </div>
+            <div class="jira-note">Unit test coverage report must be attached or linked. Coverage below 80% blocks this transition unless a Tech Lead exception is recorded.</div>
+          </div>
+
+          <div class="jira-check-section">
+            <div class="jira-check-hd" style="background:var(--purple-f);color:var(--purple-t)">🚀 Deployment &amp; Code Review</div>
+            <div class="jira-check-item" onclick="toggleCheck(this,'doi-prog',6)">
+              <div class="jira-checkbox">✓</div>
+              <div class="jira-check-text"><strong>Deployment and staging procedures recognised</strong> — deployment runbook reviewed, staging environment confirmed, and deployment steps documented or referenced</div>
+            </div>
+            <div class="jira-check-item" onclick="toggleCheck(this,'doi-prog',6)">
+              <div class="jira-checkbox">✓</div>
+              <div class="jira-check-text"><strong>PR is merged after review</strong> — pull request approved by minimum two peer reviewers and merged to the release branch; build pipeline fully green</div>
+            </div>
+          </div>
+
+          <div class="jira-check-section">
+            <div class="jira-check-hd" style="background:var(--purple-f);color:var(--purple-t)">📦 External Technical Dependencies <span style="font-size:10px;font-weight:400;color:var(--purple-t)">(complete only if applicable)</span></div>
+            <div class="jira-check-item" onclick="toggleCheck(this,'doi-prog',6)">
+              <div class="jira-checkbox">✓</div>
+              <div class="jira-check-text">
+                <strong>If a new external technical dependency was used</strong> (e.g. unlocked package, third-party library, external API):
+                <br>→ <strong>License clearing has been passed</strong> — legal/IP approval recorded (reference or ticket number below)
+              </div>
+            </div>
+            <div class="jira-check-item" onclick="toggleCheck(this,'doi-prog',6)">
+              <div class="jira-checkbox">✓</div>
+              <div class="jira-check-text">
+                <strong>New dependency added to the team's table of dependencies</strong> — name, version, license type, purpose, and approved-by recorded in the dependency register
+              </div>
+            </div>
+            <div class="jira-note">If no new external dependency was introduced in this story, tick both items above and note "N/A — no new external dependency" in the notes field below.</div>
+          </div>
+
+          <div class="mt12">
+            <div class="jira-field-label">Unit test coverage % (required)</div>
+            <div class="jira-field-val" contenteditable="true" style="cursor:text;color:var(--text)">e.g. Overall: 84% · Class A: 91% · Class B: 78%...</div>
+            <div class="jira-field-label">License clearing reference / dependency register link (if applicable)</div>
+            <textarea class="jira-textarea" style="min-height:60px" placeholder="License approval ticket, dependency register URL, or N/A if not applicable..."></textarea>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="jira-btn jira-btn-secondary" onclick="closeModal('modal-doi')">Cancel</button>
+      <button class="jira-btn jira-btn-primary" onclick="confirmTransition('modal-doi','🧪 Ready for Testing','doi-prog',6)">Confirm transition →</button>
+    </div>
+  </div>
+</div>
+
+<!-- Test Evidence Modal -->
+<div class="modal-overlay" id="modal-testev">
+  <div class="modal">
+    <div class="modal-header">
+      <div>
+        <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--teal-t);margin-bottom:4px">Jira Transition Screen · Test Evidence</div>
+        <div style="font-size:17px;font-weight:700">Test Completion &amp; Documentation Confirmation</div>
+        <div class="transition-arrow mt8">
+          <span class="chip" style="background:var(--teal-f);border-color:var(--teal-b);color:var(--teal-t)">🔬 In Test</span>
+          <span style="color:var(--teal-t);font-size:16px;font-weight:700">→</span>
+          <span class="chip" style="background:var(--teal-f);border-color:var(--teal-b);color:var(--teal-t)">👁 Ready for Acceptance</span>
+          <span class="tag" style="background:var(--teal-f);border-color:var(--teal-b);color:var(--teal-t);margin-left:auto;font-size:10px">QA Engineer only</span>
+        </div>
+      </div>
+      <button class="modal-close" onclick="closeModal('modal-testev')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="jira-warning" style="background:var(--teal-f);border:1px solid var(--teal-b);color:var(--teal-t)">
+        <span style="font-size:16px">🧪</span>
+        <div class="text-sm">Before inviting the Product Owner to UAT, confirm that <strong>all test steps are properly documented</strong> and evidence is attached. The PO must be able to review results independently without requiring a re-run from QA.</div>
+      </div>
+      <div class="jira-screen">
+        <div class="jira-screen-bar" style="background:var(--teal)">🧪 Test Completion — QA sign-off before UAT invitation</div>
+        <div class="jira-screen-body">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+            <div class="jira-field-label" style="margin:0">Test evidence checklist</div>
+            <div class="progress-ring" id="testev-prog">0 / 5</div>
+          </div>
+          <div class="jira-check-section">
+            <div class="jira-check-hd" style="background:var(--teal-f);color:var(--teal-t)">📋 Execution &amp; Results</div>
+            <div class="jira-check-item" onclick="toggleCheck(this,'testev-prog',5)">
+              <div class="jira-checkbox">✓</div>
+              <div class="jira-check-text"><strong>All AC test cases executed</strong> — functional and integration paths, 100% pass rate achieved</div>
+            </div>
+            <div class="jira-check-item" onclick="toggleCheck(this,'testev-prog',5)">
+              <div class="jira-checkbox">✓</div>
+              <div class="jira-check-text"><strong>Regression suite passed</strong> — zero P1/P2 defects open on any existing flows related to this change</div>
+            </div>
+          </div>
+          <div class="jira-check-section">
+            <div class="jira-check-hd" style="background:var(--teal-f);color:var(--teal-t)">📎 Documentation</div>
+            <div class="jira-check-item" onclick="toggleCheck(this,'testev-prog',5)">
+              <div class="jira-checkbox">✓</div>
+              <div class="jira-check-text"><strong>All test steps documented</strong> in Zephyr / Xray — each step has a recorded result (pass / fail / blocked) with a tester name and date</div>
+            </div>
+            <div class="jira-check-item" onclick="toggleCheck(this,'testev-prog',5)">
+              <div class="jira-checkbox">✓</div>
+              <div class="jira-check-text"><strong>Test execution report attached</strong> to this Jira ticket — summary accessible to PO without QA being present</div>
+            </div>
+            <div class="jira-check-item" onclick="toggleCheck(this,'testev-prog',5)">
+              <div class="jira-checkbox">✓</div>
+              <div class="jira-check-text"><strong>Zero open defects</strong> linked to this story — all found bugs are either Closed or explicitly accepted as known issues</div>
+            </div>
+          </div>
+          <div class="mt12">
+            <div class="jira-field-label">QA sign-off summary for PO (required)</div>
+            <textarea class="jira-textarea" placeholder="Brief summary: what was tested, which environment, test scope, any known limitations or edge cases to verify during UAT..."></textarea>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="jira-btn jira-btn-secondary" onclick="closeModal('modal-testev')">Cancel</button>
+      <button class="jira-btn jira-btn-primary" onclick="confirmTransition('modal-testev','👁 Ready for Acceptance','testev-prog',5)">Confirm QA sign-off →</button>
+    </div>
+  </div>
+</div>
+
+<!-- DoD Modal -->
+<div class="modal-overlay" id="modal-dod">
+  <div class="modal">
+    <div class="modal-header">
+      <div>
+        <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--green-t);margin-bottom:4px">Jira Transition Screen · DoD</div>
+        <div style="font-size:17px;font-weight:700">Definition of Done — Final Closure Checklist</div>
+        <div class="transition-arrow mt8">
+          <span class="chip" style="background:var(--teal-f);border-color:var(--teal-b);color:var(--teal-t)">👁 Ready for Acceptance</span>
+          <span style="color:var(--green-t);font-size:16px;font-weight:700">→</span>
+          <span class="chip" style="background:var(--green-f);border-color:var(--green-b);color:var(--green-t)">✅ Closed</span>
+          <span class="tag" style="background:var(--green-f);border-color:var(--green-b);color:var(--green-t);margin-left:auto;font-size:10px">PO / Release Manager only</span>
+        </div>
+      </div>
+      <button class="modal-close" onclick="closeModal('modal-dod')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="jira-warning" style="background:var(--green-f);border:1px solid var(--green-b);color:var(--green-t)">
+        <span style="font-size:16px">✅</span>
+        <div class="text-sm">This is the <strong>final gate</strong>. All items must be checked before the story is permanently Closed. Once closed, lead time and cycle time are locked and feed into the PI retrospective dashboard.</div>
+      </div>
+      <div class="jira-screen">
+        <div class="jira-screen-bar" style="background:var(--green)">✅ Definition of Done — All 7 items required to close</div>
+        <div class="jira-screen-body">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+            <div class="jira-field-label" style="margin:0">Done checklist</div>
+            <div class="progress-ring" id="dod-prog">0 / 7</div>
+          </div>
+          <div class="jira-check-section">
+            <div class="jira-check-hd" style="background:var(--green-f);color:var(--green-t)">🧪 Quality &amp; Acceptance</div>
+            <div class="jira-check-item" onclick="toggleCheck(this,'dod-prog',7)">
+              <div class="jira-checkbox">✓</div>
+              <div class="jira-check-text"><strong>All acceptance criteria verified</strong> and checked off in the story description</div>
+            </div>
+            <div class="jira-check-item" onclick="toggleCheck(this,'dod-prog',7)">
+              <div class="jira-checkbox">✓</div>
+              <div class="jira-check-text"><strong>QA engineer sign-off</strong> recorded — test execution report attached to the ticket</div>
+            </div>
+            <div class="jira-check-item" onclick="toggleCheck(this,'dod-prog',7)">
+              <div class="jira-checkbox">✓</div>
+              <div class="jira-check-text"><strong>UAT approved by Product Owner</strong> — PO approval comment or approval field updated on ticket</div>
+            </div>
+            <div class="jira-check-item" onclick="toggleCheck(this,'dod-prog',7)">
+              <div class="jira-checkbox">✓</div>
+              <div class="jira-check-text"><strong>Regression suite clean</strong> — zero P1/P2 defects open on this story or any related flows</div>
+            </div>
+          </div>
+          <div class="jira-check-section">
+            <div class="jira-check-hd" style="background:var(--green-f);color:var(--green-t)">🚀 Release &amp; Downstream</div>
+            <div class="jira-check-item" onclick="toggleCheck(this,'dod-prog',7)">
+              <div class="jira-checkbox">✓</div>
+              <div class="jira-check-text"><strong>Release note entry added</strong> — change documented for stakeholder communication and release record</div>
+            </div>
+            <div class="jira-check-item" onclick="toggleCheck(this,'dod-prog',7)">
+              <div class="jira-checkbox">✓</div>
+              <div class="jira-check-text"><strong>Deployed to production</strong> — smoke test passed, feature accessible and verified in production environment</div>
+            </div>
+            <div class="jira-check-item" onclick="toggleCheck(this,'dod-prog',7)">
+              <div class="jira-checkbox">✓</div>
+              <div class="jira-check-text"><strong>Downstream stories notified</strong> — all "blocked by this story" Jira links have received a resolution comment</div>
+            </div>
+          </div>
+          <div class="mt12">
+            <div class="jira-field-label">Deployment confirmation / release notes reference</div>
+            <textarea class="jira-textarea" style="min-height:60px" placeholder="Production deployment build number, URL, release notes link, or handover notes for operations..."></textarea>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="jira-btn jira-btn-secondary" onclick="closeModal('modal-dod')">Cancel</button>
+      <button class="jira-btn" style="background:var(--green-f);color:var(--green-t);border:1.5px solid var(--green-b);font-weight:700;padding:7px 16px;border-radius:4px;cursor:pointer" onclick="confirmTransition('modal-dod','✅ Closed','dod-prog',7)">🔒 Close story permanently →</button>
+    </div>
+  </div>
+</div>
+
+<!-- On Hold Modal -->
+<div class="modal-overlay" id="modal-onhold">
+  <div class="modal">
+    <div class="modal-header">
+      <div>
+        <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--amber-t);margin-bottom:4px">Jira Transition Screen · Blocker Log</div>
+        <div style="font-size:17px;font-weight:700">Impediment Log — Required before pausing</div>
+        <div class="transition-arrow mt8">
+          <span class="chip" style="background:var(--blue-f);border-color:var(--blue-b);color:var(--blue-t)">In Progress / Ready for Testing / In Test</span>
+          <span style="color:var(--amber-t);font-size:16px;font-weight:700">→</span>
+          <span class="chip" style="background:var(--amber-f);border-color:var(--amber-b);color:var(--amber-t)">⚠️ On Hold</span>
+        </div>
+      </div>
+      <button class="modal-close" onclick="closeModal('modal-onhold')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="jira-warning" style="background:var(--amber-f);border:1px solid var(--amber-b);color:var(--amber-t)">
+        <span style="font-size:16px">⚠️</span>
+        <div class="text-sm">Every On Hold transition must be logged. This data feeds the <strong>block time KPI</strong> and the impediment rate dashboard. The Scrum Master is auto-notified on submit.</div>
+      </div>
+      <div class="jira-screen">
+        <div class="jira-screen-bar" style="background:#974F0C">⚠️ Impediment Log — All fields required</div>
+        <div class="jira-screen-body">
+          <div class="jira-field-label">Blocker type</div>
+          <select style="width:100%;padding:7px 10px;border:1px solid var(--border);border-radius:4px;background:var(--bg2);font-size:13px;color:var(--text);margin-bottom:14px">
+            <option>Select blocker type...</option>
+            <option>API / Integration dependency not resolved</option>
+            <option>Environment unavailable or unstable</option>
+            <option>Pending architecture or technical decision</option>
+            <option>Cross-team deliverable not received</option>
+            <option>External dependency — license clearing in progress</option>
+            <option>External system (ERP, Marketing) unavailable</option>
+            <option>Other (describe below)</option>
+          </select>
+          <div class="jira-field-label">Owning team / person responsible for resolution</div>
+          <div class="jira-field-val" contenteditable="true" style="cursor:text;color:var(--text)">Type the team or person who owns resolving this blocker...</div>
+          <div class="jira-field-label">Expected resolution date</div>
+          <input type="date" style="width:100%;padding:7px 10px;border:1px solid var(--border);border-radius:4px;background:var(--bg2);font-size:13px;color:var(--text);margin-bottom:14px">
+          <div class="jira-field-label">Blocker description (required)</div>
+          <textarea class="jira-textarea" style="min-height:90px" placeholder="What is blocked, who needs to act, what is the impact on the sprint goal, and what workaround (if any) is being explored..."></textarea>
+          <div class="mt12" style="padding:10px 12px;background:var(--blue-f);border-radius:6px;border:1px solid var(--blue-b);font-size:12px;color:var(--blue-t)">
+            📧 <strong>Auto-notification:</strong> The Scrum Master will receive a Jira notification immediately. If unresolved within <strong>2 working days</strong>, this blocker is auto-escalated to the ART Sync agenda.
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="jira-btn jira-btn-secondary" onclick="closeModal('modal-onhold')">Cancel</button>
+      <button class="jira-btn" style="background:var(--amber-f);color:var(--amber-t);border:1.5px solid var(--amber-b);font-weight:700;padding:7px 16px;border-radius:4px;cursor:pointer" onclick="closeModal('modal-onhold')">⚠️ Log impediment &amp; pause story</button>
+    </div>
+  </div>
+</div>
+
+<!-- Confirm Modal -->
+<div class="modal-overlay" id="modal-confirm">
+  <div class="modal" style="max-width:400px">
+    <div class="modal-header">
+      <div style="font-size:17px;font-weight:700;color:var(--teal-t)">✅ Transition confirmed</div>
+      <button class="modal-close" onclick="closeModal('modal-confirm')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div style="text-align:center;padding:20px 0">
+        <div style="font-size:40px;margin-bottom:12px">🚀</div>
+        <div id="confirm-msg" style="font-size:15px;font-weight:600;color:var(--text)"></div>
+        <div style="font-size:12px;color:var(--muted);margin-top:8px">All checklist items verified. The Jira transition has been recorded.</div>
+      </div>
+    </div>
+    <div class="modal-footer" style="justify-content:center">
+      <button class="jira-btn jira-btn-primary" onclick="closeModal('modal-confirm')">Done</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ── Tabs ── */
+function showTab(id){
+  document.querySelectorAll('.tab-page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById('tab-'+id).classList.add('active');
+  const map={overview:0,flow:1,screens:2};
+  document.querySelectorAll('.nav-tab')[map[id]].classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+/* ── Modals ── */
+function openModal(id){document.getElementById(id).classList.add('open')}
+function closeModal(id){document.getElementById(id).classList.remove('open')}
+document.querySelectorAll('.modal-overlay').forEach(o=>{
+  o.addEventListener('click',function(e){if(e.target===this)this.classList.remove('open')});
+});
+
+/* ── Checkbox toggle ── */
+function toggleCheck(item,progId,total){
+  item.classList.toggle('checked');
+  const checked=item.closest('.jira-screen').querySelectorAll('.jira-check-item.checked').length;
+  const el=document.getElementById(progId);
+  el.textContent=checked+' / '+total;
+  el.className='progress-ring'+(checked===total?' complete':checked>0?' partial':'');
+}
+
+/* ── Confirm transition ── */
+function confirmTransition(modalId,targetStatus,progId,total){
+  const panel=document.getElementById(modalId);
+  const checked=panel.querySelectorAll('.jira-check-item.checked').length;
+  if(checked<total){
+    const el=document.getElementById(progId);
+    const orig=el.textContent;
+    el.style.background='var(--red-f)';el.style.color='var(--red-t)';
+    el.textContent='Complete all items!';
+    setTimeout(()=>{el.style.background='';el.style.color='';el.textContent=orig},2200);
+    return;
+  }
+  closeModal(modalId);
+  document.getElementById('confirm-msg').textContent='Story moved to '+targetStatus;
+  setTimeout(()=>openModal('modal-confirm'),200);
+}
+</script>
+</body>
+</html>
