@@ -1,9 +1,9 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Workflow Improvement Proposal — Story & Technical Story | Jira Admin + RTE</title>
+<title>Workflow Improvement Proposal — Story & Technical Story</title>
 <style>
 :root {
   --bg:#FFFFFF; --bg2:#F7F8FA; --bg3:#EBECF0;
@@ -22,21 +22,21 @@
   --orange-f:#FFF0B3; --orange-b:#FF991F; --orange-t:#7A4200;
 }
 *{box-sizing:border-box;margin:0;padding:0}
-html{scroll-behavior:smooth}
-body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;font-size:14px;line-height:1.6;color:var(--text);background:var(--bg)}
+html{scroll-behavior:smooth;overflow-x:hidden}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;font-size:14px;line-height:1.6;color:var(--text);background:var(--bg);overflow-x:hidden}
 
 /* ── PAGE ── */
-.page{max-width:1080px;margin:0 auto;padding:0 24px 80px}
+.page{max-width:1100px;margin:0 auto;padding:0 18px 80px}
 
 /* ── COVER ── */
-.cover{background:linear-gradient(135deg,#0747A6 0%,#0052CC 55%,#2684FF 100%);color:#fff;padding:42px 52px 0;margin:-1px -24px 0;position:relative;overflow:hidden}
+.cover{background:linear-gradient(135deg,#0747A6 0%,#0052CC 55%,#2684FF 100%);color:#fff;padding:28px 36px 20px;margin:-1px 0 0;position:relative;overflow:hidden;height:230px}
 .cover::before,.cover::after{content:'';position:absolute;border-radius:50%;background:rgba(255,255,255,.05)}
-.cover::before{right:-60px;top:-60px;width:300px;height:300px}
-.cover::after{right:80px;bottom:-80px;width:200px;height:200px}
-.cover-tag{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.3);padding:3px 10px;border-radius:20px;display:inline-block;margin-bottom:16px}
-.cover-title{font-size:32px;font-weight:800;line-height:1.2;margin-bottom:12px;max-width:680px}
-.cover-sub{font-size:15px;opacity:.85;max-width:600px;line-height:1.65;margin-bottom:24px}
-.cover-meta{display:flex;gap:20px;flex-wrap:wrap}
+.cover::before{right:-56px;top:-64px;width:290px;height:290px}
+.cover::after{right:48px;bottom:-72px;width:190px;height:190px}
+.cover-tag{font-size:10px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.3);padding:3px 9px;border-radius:20px;display:inline-block;margin-bottom:8px}
+.cover-title{font-size:25px;font-weight:700;line-height:1.15;margin-bottom:8px;max-width:680px}
+.cover-sub{font-size:13px;opacity:.85;max-width:760px;line-height:1.35;margin-bottom:10px;display:-webkit-box;-webkit-line-clamp:2;line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.cover-meta{display:flex;gap:14px;flex-wrap:wrap}
 .cover-meta span{font-size:12px;opacity:.75;display:flex;align-items:center;gap:5px}
 
 /* ── NAV ── */
@@ -71,7 +71,7 @@ h3{font-size:15px;font-weight:700;margin:20px 0 8px;color:var(--text)}
 .callout.success{background:#E3FCEF;border-left:4px solid #36B37E;color:#006644}
 
 /* ── FLOW STRIP ── */
-.flow-strip{display:flex;flex-wrap:wrap;gap:0;align-items:center;padding:14px;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);overflow-x:auto}
+.flow-strip{display:flex;flex-wrap:wrap;gap:0;align-items:center;padding:30px;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);overflow-x:auto}
 .flow-node{display:flex;flex-direction:column;align-items:center;gap:3px;flex-shrink:0;cursor:pointer;padding:4px 2px;border-radius:6px;transition:background .15s}
 .flow-node:hover{background:var(--bg3)}
 .fn-chip{padding:5px 11px;border-radius:20px;font-size:11px;font-weight:700;border:1.5px solid;text-align:center}
@@ -189,8 +189,8 @@ h3{font-size:15px;font-weight:700;margin:20px 0 8px;color:var(--text)}
     <div class="cover-title">Story &amp; Technical Story<br>Workflow Redesign</div>
     <div class="cover-sub">A leaner, more intuitive Jira status flow enhancing the existing workflows — with embedded quality gates and smart transition screens that guide teams through DoR, DoI, and DoD checkpoints at the right moment. Updated after internal alignment session.</div>
     <div class="cover-meta">
-      <span>👥 Jira Admin Team + RTE</span>
-      <span>📅 May 2025 · v1.1</span>
+      <span>👥 Vidhya Sagar M | ATC</span>
+      <span>📅 15 May 2026 · v1.1</span>
     </div>
   </div>
 </div>
@@ -222,7 +222,7 @@ h3{font-size:15px;font-weight:700;margin:20px 0 8px;color:var(--text)}
     <div class="card" style="border-top:3px solid var(--purple)">
       <div style="font-size:22px;margin-bottom:8px">📈</div>
       <div class="fw7 mb8">KPI visibility</div>
-      <p class="text-sm text-muted">Each status is positioned so lead time, cycle time, block time, and test turnaround are measurable with zero manual effort from Jira control charts and CFD.</p>
+      <p class="text-sm text-muted">Each status is positioned so lead time, cycle time, block time, and test turnaround are measurable with zero manual effort from Jira control charts.</p>
     </div>
     <div class="card" style="border-top:3px solid var(--teal)">
       <div style="font-size:22px;margin-bottom:8px">🔷</div>
@@ -310,7 +310,7 @@ h3{font-size:15px;font-weight:700;margin:20px 0 8px;color:var(--text)}
     </div>
     <div class="flow-arr">›</div>
     <div class="flow-node" onclick="null">
-      <div class="fn-chip" style="background:var(--blue-f);border-color:var(--blue-b);color:var(--blue-t)">⚙️ In Progress</div>
+      <div class="fn-chip" style="background:var(--blue-f);border-color:var(--blue-b);color:var(--blue-t);padding:5px 6px">⚙️ In Development</div>
       <div class="fn-sub">45% · Dev</div>
     </div>
     <div class="flow-arr">›</div>
@@ -347,7 +347,7 @@ h3{font-size:15px;font-weight:700;margin:20px 0 8px;color:var(--text)}
 
   <div class="callout warn" style="margin-bottom:24px">
     <div class="callout-icon">⚠️</div>
-    <div><strong>On Hold</strong> can be entered from In Progress, Ready for Testing, or In Test. Story always returns to its previous status when unblocked. Entry triggers the mandatory blocker log screen. · Click ▶ on any gate node above to preview its transition screen.</div>
+    <div><strong>On Hold</strong> can be entered from In Development, Ready for Testing, or In Test. Story always returns to its previous status when unblocked. Entry triggers the mandatory blocker log screen. · Click ▶ on any gate node above to preview its transition screen.</div>
   </div>
 
   <h2>📊 Status summary</h2>
@@ -383,13 +383,13 @@ h3{font-size:15px;font-weight:700;margin:20px 0 8px;color:var(--text)}
       </tr>
       <tr>
         <td>4</td>
-        <td><span class="chip" style="background:var(--blue-f);border-color:var(--blue-b);color:var(--blue-t)">⚙️ In Progress</span></td>
+        <td><span class="chip" style="background:var(--blue-f);border-color:var(--blue-b);color:var(--blue-t)">⚙️ In Development</span></td>
         <td class="text-sm">Development</td><td class="text-sm">Developer + Reviewers</td>
         <td><div class="text-sm text-muted">45%</div><div class="pct-wrap"><div class="pct-fill" style="width:45%"></div></div></td>
         <td><span class="tag" style="background:var(--purple-f);border-color:var(--purple-b);color:var(--purple-t);font-size:10px">Cycle</span> <span class="tag" style="background:var(--amber-f);border-color:var(--amber-b);color:var(--amber-t);font-size:10px">Block time</span></td>
         <td>—</td>
       </tr>
-      <tr class="gate-row-doi"><td colspan="7">🔷 DoI — Definition of Implemented screen &nbsp;·&nbsp; Transition: In Progress → Ready for Testing</td></tr>
+      <tr class="gate-row-doi"><td colspan="7">🔷 DoI — Definition of Implemented screen &nbsp;·&nbsp; Transition: In Development → Ready for Testing</td></tr>
       <tr>
         <td>5</td>
         <td><span class="chip" style="background:var(--teal-f);border-color:var(--teal-b);color:var(--teal-t)">🧪 Ready for Testing</span></td>
@@ -428,7 +428,7 @@ h3{font-size:15px;font-weight:700;margin:20px 0 8px;color:var(--text)}
         <td><span class="chip" style="background:var(--amber-f);border-color:var(--amber-b);color:var(--amber-t)">⚠️ On Hold</span></td>
         <td class="text-sm">Paused (any phase)</td><td class="text-sm">Scrum Master owns</td>
         <td><div class="text-sm text-muted">— paused</div></td>
-        <td><span class="tag" style="background:var(--amber-f);border-color:var(--amber-b);color:var(--amber-t);font-size:10px">Block time</span> <span class="tag" style="background:var(--amber-f);border-color:var(--amber-b);color:var(--amber-t);font-size:10px">CFD</span></td>
+        <td><span class="tag" style="background:var(--amber-f);border-color:var(--amber-b);color:var(--amber-t);font-size:10px">Block time</span></td>
         <td><span class="tag" style="background:var(--amber-f);border-color:var(--amber-b);color:var(--amber-t);font-size:10px">Blocker Log</span></td>
       </tr>
     </tbody>
@@ -520,7 +520,7 @@ h3{font-size:15px;font-weight:700;margin:20px 0 8px;color:var(--text)}
       <div>
         <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--light);margin-bottom:6px">Transitions</div>
         <div class="text-sm text-muted" style="line-height:1.8">
-          <span style="color:var(--teal-t)">→</span> &nbsp;In Progress (coding/config starts)<br>
+          <span style="color:var(--teal-t)">→</span> &nbsp;In Development (coding/config starts)<br>
           <span style="color:var(--red-t)">← </span> &nbsp;In Analysis (if scope re-opened)<br><br>
           <strong>Bottleneck signal:</strong><br>
           Queue growth here implies sprint capacity mismatch
@@ -531,8 +531,8 @@ h3{font-size:15px;font-weight:700;margin:20px 0 8px;color:var(--text)}
 
   <div class="card" style="border-left:4px solid var(--blue-b);order:4">
     <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;flex-wrap:wrap">
-      <span class="chip" style="background:var(--blue-f);border-color:var(--blue-b);color:var(--blue-t)">⚙️ In Progress</span>
-      <span class="tag" style="background:var(--bg2);border-color:var(--border);color:var(--muted)">Jira: In Progress</span>
+      <span class="chip" style="background:var(--blue-f);border-color:var(--blue-b);color:var(--blue-t)">⚙️ In Development</span>
+      <span class="tag" style="background:var(--bg2);border-color:var(--border);color:var(--muted)">Jira: In Development</span>
       <span class="tag" style="background:var(--bg2);border-color:var(--border);color:var(--muted)">Owner: Developer + Reviewers</span>
       <span class="tag" style="background:var(--purple-f);border-color:var(--purple-b);color:var(--purple-t);font-size:10px">KPI: Cycle time</span>
     </div>
@@ -611,7 +611,7 @@ h3{font-size:15px;font-weight:700;margin:20px 0 8px;color:var(--text)}
         <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--light);margin-bottom:6px">Transitions</div>
         <div class="text-sm text-muted" style="line-height:1.8">
           <span style="color:var(--teal-t)">→</span> &nbsp;Ready for Acceptance (with test evidence)<br>
-          <span style="color:var(--red-t)">← </span> &nbsp;In Progress (if defect found)<br>
+          <span style="color:var(--red-t)">← </span> &nbsp;In Development (if defect found)<br>
           <span style="color:var(--amber-t)">→</span> &nbsp;On Hold (if blocked)<br><br>
           <strong>Bottleneck signal:</strong><br>
           Repeated bounce-back indicates quality gate weakness upstream
@@ -642,7 +642,7 @@ h3{font-size:15px;font-weight:700;margin:20px 0 8px;color:var(--text)}
         <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--light);margin-bottom:6px">Transitions</div>
         <div class="text-sm text-muted" style="line-height:1.8">
           <span style="color:var(--teal-t)">→</span> &nbsp;Closed (after DoD screen)<br>
-          <span style="color:var(--red-t)">← </span> &nbsp;In Progress (if UAT rejects)<br><br>
+          <span style="color:var(--red-t)">← </span> &nbsp;In Development (if UAT rejects)<br><br>
           <strong>Bottleneck signal:</strong><br>
           Long acceptance delays indicate stakeholder response lag
         </div>
@@ -728,7 +728,7 @@ h3{font-size:15px;font-weight:700;margin:20px 0 8px;color:var(--text)}
   <h2>🔀 Status transition flowchart</h2>
   <div style="background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin-bottom:24px;" class="flow-container">
 
-    <svg id="flow-svg" viewBox="0 0 1100 555" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet" style="width:100%;height:auto;display:block;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;overflow:auto">
+    <svg id="flow-svg" viewBox="0 0 1100 565" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet" style="width:100%;height:auto;display:block;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;overflow:auto">
       <defs>
         <!-- arrow markers -->
         <marker id="arr-gray" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="#97A0AF"/></marker>
@@ -779,9 +779,9 @@ h3{font-size:15px;font-weight:700;margin:20px 0 8px;color:var(--text)}
       <!-- Arrow RFI→InProgress -->
       <line x1="399" y1="80" x2="423" y2="80" stroke="#4C9AFF" stroke-width="2" marker-end="url(#arr-blue)"/>
 
-      <!-- In Progress -->
+      <!-- In Development -->
       <rect x="425" y="62" width="88" height="36" rx="8" fill="#DEEBFF" stroke="#4C9AFF" stroke-width="1.5"/>
-      <text x="469" y="76" text-anchor="middle" font-size="10" font-weight="700" fill="#0747A6">⚙️ In Progress</text>
+      <text x="469" y="76" text-anchor="middle" font-size="10" font-weight="700" fill="#0747A6">⚙️ In Development</text>
       <text x="469" y="89" text-anchor="middle" font-size="8" fill="#97A0AF">45% · Dev+Rev</text>
 
       <!-- Arrow InProgress→DoI gate (horizontally aligned) -->
@@ -843,43 +843,56 @@ h3{font-size:15px;font-weight:700;margin:20px 0 8px;color:var(--text)}
       <text x="1036" y="76" text-anchor="middle" font-size="10" font-weight="700" fill="#006644">✅ Closed</text>
       <text x="1036" y="89" text-anchor="middle" font-size="8" fill="#97A0AF">100% 🚀</text>
 
-      <!-- ═══ ON HOLD (bottom) ═══ -->
-      <!-- On Hold box -->
-      <rect x="352" y="310" width="98" height="40" rx="8" fill="#FFFAE6" stroke="#F6C90E" stroke-width="2"/>
-      <text x="401" y="325" text-anchor="middle" font-size="10" font-weight="700" fill="#974F0C">⚠️ On Hold</text>
-      <text x="401" y="338" text-anchor="middle" font-size="8" fill="#974F0C">Block time KPI</text>
-      <!-- Screen badge -->
-      <rect x="382" y="299" width="38" height="12" rx="3" fill="#FFFAE6" stroke="#F6C90E" stroke-width="1"/>
-      <text x="401" y="308" text-anchor="middle" font-size="7" font-weight="700" fill="#974F0C">BLOCKER LOG</text>
+      <!-- ═══ ON HOLD (below In Development) ═══ -->
+      <!-- On Hold box (center x=469, aligned with In Development) -->
+      <rect x="420" y="310" width="98" height="40" rx="8" fill="#FFFAE6" stroke="#F6C90E" stroke-width="2"/>
+      <text x="469" y="325" text-anchor="middle" font-size="10" font-weight="700" fill="#974F0C">⚠️ On Hold</text>
+      <text x="469" y="338" text-anchor="middle" font-size="8" fill="#974F0C">Block time KPI</text>
 
       <!-- Entry arrows to On Hold from statuses -->
-      <!-- From In Progress (469,98) → down to On Hold (401,310) -->
-      <path d="M469,98 L469,240 L450,240 L450,310" fill="none" stroke="#FF991F" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#arr-orange)"/>
-      <text x="430" y="170" font-size="8" fill="#FF991F" font-weight="600">hold</text>
+      <!-- From In Development (469,98) → straight down to On Hold top -->
+      <path d="M476,98 L476,310" fill="none" stroke="#FF991F" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#arr-orange)"/>
+      <text x="488" y="210" font-size="8" fill="#FF991F" font-weight="600">hold</text>
 
-      <!-- From Ready for Testing (642,98) → down to On Hold -->
-      <path d="M642,98 L642,245 L430,245 L430,310" fill="none" stroke="#FF991F" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#arr-orange)"/>
+      <!-- From Ready for Testing (642,98) → down then left to On Hold -->
+      <path d="M635,98 L635,270 L508,270 L508,310" fill="none" stroke="#FF991F" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#arr-orange)"/>
 
-      <!-- From In Test (743,98) → down to On Hold -->
-      <path d="M743,98 L743,250 L440,250 L440,310" fill="none" stroke="#FF991F" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#arr-orange)"/>
+      <!-- From In Test (743,98) → down then left to On Hold -->
+      <path d="M743,98 L743,245 L518,245 L518,310" fill="none" stroke="#FF991F" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#arr-orange)"/>
 
-      <!-- Exit arrows from On Hold back to statuses -->
-      <path d="M401,310 L401,280 L469,280 L469,98" fill="none" stroke="#FF5630" stroke-width="1.5" stroke-dasharray="4,3" marker-end="url(#arr-red)"/>
-      <text x="480" y="190" font-size="8" fill="#FF5630" font-weight="600">resume</text>
+      <!-- Exit arrows from On Hold back to statuses (resume) -->
+      <path d="M462,310 L462,98" fill="none" stroke="#FF5630" stroke-width="1.5" stroke-dasharray="4,3" marker-end="url(#arr-red)"/>
+      <text x="443" y="210" font-size="8" fill="#FF5630" font-weight="600">resume</text>
 
       <!-- ═══ BACK TRANSITIONS (red dashed) ═══ -->
-      <!-- In Progress back to Ready for Implementation -->
+      <!-- In Development back to Ready for Implementation -->
       <path d="M469,62 L469,40 L350,40 L350,59" fill="none" stroke="#FF5630" stroke-width="1.2" stroke-dasharray="4,3" marker-end="url(#arr-red)"/>
 
-      <!-- In Test back to In Progress -->
+      <!-- In Test back to In Development -->
       <path d="M707,62 L707,24 L469,24 L469,62" fill="none" stroke="#FF5630" stroke-width="1.2" stroke-dasharray="4,3" marker-end="url(#arr-red)"/>
-      <text x="588" y="20" text-anchor="middle" font-size="8" fill="#FF5630">defect found → back to In Progress</text>
+      <text x="588" y="20" text-anchor="middle" font-size="8" fill="#FF5630">defect found → back to In Development</text>
 
-      <!-- Ready for Acceptance back to In Progress (routed above flow) -->
+      <!-- Ready for Acceptance back to In Development (routed above flow) -->
       <path d="M865,59 L865,14 L469,14 L469,62" fill="none" stroke="#FF5630" stroke-width="1.2" stroke-dasharray="4,3" marker-end="url(#arr-red)"/>
 
       <!-- In Analysis back to New -->
       <path d="M169,62 L169,50 L58,50 L58,62" fill="none" stroke="#FF5630" stroke-width="1.2" stroke-dasharray="4,3" marker-end="url(#arr-red)"/>
+
+      <!-- ═══ DIRECT-TO-CLOSED shortcuts (below main flow) ═══ -->
+      <!-- New → Closed (y=130) -->
+      <path d="M58,98 L58,130 L1036,130 L1036,98" fill="none" stroke="#00875A" stroke-width="1.3" stroke-dasharray="5,3" marker-end="url(#arr-green)"/>
+
+      <!-- In Analysis → Closed (y=148) -->
+      <path d="M169,98 L169,148 L1036,148 L1036,99" fill="none" stroke="#00875A" stroke-width="1.3" stroke-dasharray="5,3" marker-end="url(#arr-green)"/>
+
+      <!-- Ready for Implementation → Closed (y=166) -->
+      <path d="M350,101 L350,166 L1036,166 L1036,100" fill="none" stroke="#00875A" stroke-width="1.3" stroke-dasharray="5,3" marker-end="url(#arr-green)"/>
+
+      <!-- In Development → Closed (y=184) -->
+      <path d="M475,98 L475,184 L1036,184 L1036,101" fill="none" stroke="#00875A" stroke-width="1.3" stroke-dasharray="5,3" marker-end="url(#arr-green)"/>
+
+      <!-- Label -->
+      <text x="530" y="126" text-anchor="middle" font-size="8" fill="#006644" font-weight="600" opacity="0.85">direct → Closed</text>
 
       <!-- ═══ KPI measurement spans (22px spacing) ═══ -->
       <!-- Lead time (widest) -->
@@ -901,8 +914,8 @@ h3{font-size:15px;font-weight:700;margin:20px 0 8px;color:var(--text)}
       <text x="835" y="358" text-anchor="middle" font-size="9" fill="#006644" font-weight="600">Test TAT</text>
 
       <!-- ═══ LEGEND (bottom-right corner) ═══ -->
-      <!-- box tall enough for 5 rows at 18px spacing + 14px title + 12px padding top/bottom -->
-      <rect x="900" y="434" width="185" height="112" rx="6" fill="#F7F8FA" stroke="#DFE1E6" stroke-width="1"/>
+      <!-- box tall enough for 6 rows at 18px spacing + 14px title + 12px padding top/bottom -->
+      <rect x="900" y="434" width="185" height="130" rx="6" fill="#F7F8FA" stroke="#DFE1E6" stroke-width="1"/>
       <text x="913" y="449" font-size="11" font-weight="700" fill="#5E6C84">LEGEND</text>
 
       <!-- Row 1: Status box example (y-centre 462) -->
@@ -924,6 +937,10 @@ h3{font-size:15px;font-weight:700;margin:20px 0 8px;color:var(--text)}
       <!-- Row 5: On Hold entry (y 534) -->
       <line x1="913" y1="534" x2="949" y2="534" stroke="#FF991F" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#arr-orange)"/>
       <text x="957" y="538" font-size="10" fill="#5E6C84">On Hold entry</text>
+
+      <!-- Row 6: Direct to Closed (y 551) -->
+      <line x1="913" y1="551" x2="949" y2="551" stroke="#00875A" stroke-width="1.3" stroke-dasharray="5,3" marker-end="url(#arr-green)"/>
+      <text x="957" y="555" font-size="10" fill="#5E6C84">Direct → Closed</text>
 
     </svg>
   </div>
@@ -957,7 +974,7 @@ h3{font-size:15px;font-weight:700;margin:20px 0 8px;color:var(--text)}
     <div class="screen-card" onclick="openModal('modal-doi')">
       <div class="screen-card-top">
         <div class="screen-card-trigger"><span style="background:var(--purple-f);color:var(--purple-t);padding:1px 6px;border-radius:3px;font-weight:800">DoI</span> Triggered on transition</div>
-        <div class="screen-card-name">⚙️ In Progress → 🧪 Ready for Testing</div>
+        <div class="screen-card-name">⚙️ In Development → 🧪 Ready for Testing</div>
         <div class="screen-card-arrow">Before QA receives story · Developer / Tech Lead only</div>
       </div>
       <div class="screen-card-preview">
@@ -1012,7 +1029,7 @@ h3{font-size:15px;font-weight:700;margin:20px 0 8px;color:var(--text)}
       <div class="screen-card-top">
         <div class="screen-card-trigger"><span style="background:var(--amber-f);color:var(--amber-t);padding:1px 6px;border-radius:3px;font-weight:800">BLOCK</span> Any → On Hold</div>
         <div class="screen-card-name">⚠️ Moving to On Hold — Blocker Log</div>
-        <div class="screen-card-arrow">From In Progress, Ready for Testing, or In Test</div>
+        <div class="screen-card-arrow">From In Development, Ready for Testing, or In Test</div>
       </div>
       <div class="screen-card-preview">
         <div style="font-size:10px;color:var(--muted);padding:4px 0 2px">Blocker type (required dropdown)</div>
@@ -1130,7 +1147,7 @@ h3{font-size:15px;font-weight:700;margin:20px 0 8px;color:var(--text)}
         <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--purple-t);margin-bottom:4px">Jira Transition Screen · DoI</div>
         <div style="font-size:17px;font-weight:700">Definition of Implemented Checklist</div>
         <div class="transition-arrow mt8">
-          <span class="chip" style="background:var(--blue-f);border-color:var(--blue-b);color:var(--blue-t)">⚙️ In Progress</span>
+          <span class="chip" style="background:var(--blue-f);border-color:var(--blue-b);color:var(--blue-t)">⚙️ In Development</span>
           <span style="color:var(--purple-t);font-size:16px;font-weight:700">→</span>
           <span class="chip" style="background:var(--teal-f);border-color:var(--teal-b);color:var(--teal-t)">🧪 Ready for Testing</span>
           <span class="tag" style="background:var(--purple-f);border-color:var(--purple-b);color:var(--purple-t);margin-left:auto;font-size:10px">Developer / Tech Lead only</span>
@@ -1362,7 +1379,7 @@ h3{font-size:15px;font-weight:700;margin:20px 0 8px;color:var(--text)}
         <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--amber-t);margin-bottom:4px">Jira Transition Screen · Blocker Log</div>
         <div style="font-size:17px;font-weight:700">Impediment Log — Required before pausing</div>
         <div class="transition-arrow mt8">
-          <span class="chip" style="background:var(--blue-f);border-color:var(--blue-b);color:var(--blue-t)">In Progress / Ready for Testing / In Test</span>
+          <span class="chip" style="background:var(--blue-f);border-color:var(--blue-b);color:var(--blue-t)">In Development / Ready for Testing / In Test</span>
           <span style="color:var(--amber-t);font-size:16px;font-weight:700">→</span>
           <span class="chip" style="background:var(--amber-f);border-color:var(--amber-b);color:var(--amber-t)">⚠️ On Hold</span>
         </div>
@@ -1473,3 +1490,4 @@ function confirmTransition(modalId,targetStatus,progId,total){
 </script>
 </body>
 </html>
+
